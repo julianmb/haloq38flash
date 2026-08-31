@@ -1,0 +1,23 @@
+services:
+  qwen38-flash-next:
+    build: .
+    image: haloq38flash:latest
+    container_name: qwen38-flash-next
+    devices:
+      - /dev/dri
+    group_add:
+      - video
+      - render
+    security_opt:
+      - seccomp=unconfined
+    volumes:
+      - /mnt/ssd2/models/qwen38-flash-next:/models:ro
+    ports:
+      - "8080:8080"
+    environment:
+      - LD_LIBRARY_PATH=/app
+    # override CMD to change context, quant, or add mtp:
+    # docker compose run qwen38-flash-next \
+    #   /app/llama-server -m /models/Qwen3.8-Flash-Next-IQ4_XS-PLE.gguf \
+    #   -c 131072 -md /models/mtp-Qwen3.8-Flash-Next-Q8_0.gguf \
+    #   --spec-type draft-mtp --spec-draft-n-max 6 --spec-draft-p-min 0.75
