@@ -2,7 +2,9 @@
 
 # haloq38flash
 
-**qwen3.8-flash-next on amd strix halo — 91g quant, 56 tok/s, 262k context**
+**qwen3.8-flash-next (125b-a6b) on amd strix halo — 56 tok/s mtp, 262k context, 91g provenance-verified quant**
+
+*converter bug found + fixed · vulkan fa/mmq kernel tuning · greedy-oracle validated speculative decoding · 51b n-gram table cut to 4 bits · ssd streaming to 262k*
 
 [![HF Model](https://img.shields.io/badge/🤗_Model-IQ4_XS_PLE-ffD21E)](https://huggingface.co/julianmb/Qwen3.8-Flash-Next-IQ4_XS-GGUF)
 [![Speed](https://img.shields.io/badge/MTP_@8k-56.4_t%2Fs-brightgreen)](#results)
