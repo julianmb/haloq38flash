@@ -54,6 +54,13 @@ need 262k context.
 > [!NOTE]
 > no collapse through 32k. the 128k+ falloff is context-mechanics
 > (sparse-attention indexer), not quant size — see the reversal below.
+>
+> row provenance: each row is a separate n=1 run — 0–32k from the ple-depth
+> sweep, 128k from the depth128 run, 256k plain from the ssd-streaming run.
+> the 256k mtp cell is the merged build-hq38 engine (`-ub 512` chunked
+> prefill + ple→cpu offload) — the daily-driver build swap-dies at 256k mtp.
+> same-config mtp runs spread up to ~40%: 56.4 vs 33.5 t/s at 8k across two
+> sweeps. peaks are peaks, not medians.
 
 <details>
 <summary><b>the 128k reversal — the PLE quant loses under MTP at depth</b></summary>
