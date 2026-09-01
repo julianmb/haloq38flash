@@ -59,7 +59,9 @@ fi
 
 if [ -n "${1:-}" ]; then
   # F16 ground truth: 330G does not fit UMA — pure CPU, mmap, few chunks
-  run_ppl f16 "$MDIR/Qwen3.8-Flash-Next-F16.gguf" -c 2048 -ngl 0 --chunks "$1" 7200
+  local_chunks=8
+  [ "${1:-}" != "f16-only" ] && local_chunks="$1"
+  run_ppl f16 "$MDIR/Qwen3.8-Flash-Next-F16.gguf" -c 2048 -ngl 0 --chunks "$local_chunks" 7200
 fi
 
 log "=== ppl suite done ==="
