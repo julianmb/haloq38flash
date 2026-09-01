@@ -16,6 +16,27 @@
 
 </div>
 
+<details>
+<summary><b>plain english — what was done</b></summary>
+
+qwen3.8-flash-next is the new qwen model that is great for coding — it beats
+claude opus 4.6 on swe-bench and runs on a $2500 mini pc.
+
+1. the official conversion code missed a step — every hyper-connection norm
+   was off by exactly 1.0, so the first quant printed garbage. we found it,
+   fixed the converter, and added a test so it never happens again.
+2. we made the model smaller without losing quality — the big 51b n-gram table
+   tolerates 4-bit, saving 27g — then proved it across context depths from
+   0 to 256k.
+3. we kept everything that makes strix halo fast — vulkan kernels, graph
+   reuse, speculative decoding with the 4b draft head.
+
+if you just want to run it: `docker compose up --build` and open
+`http://localhost:8080`. pick the 91g file for speed, the 116g file if you
+need 262k context.
+
+</details>
+
 ---
 
 ## results
