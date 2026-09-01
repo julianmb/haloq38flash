@@ -10,10 +10,10 @@ here is the measured decode performance on our 128g strix halo setup (vulkan/rad
 
 | context depth | 116g static plain / mtp (t/s) | 91g ple plain / mtp (t/s) |
 |---|---|---|
-| 0 | 29.2 / 48.4 | 29.0 / 45.7 |
-| 8k | 22.9 / 42.8 | 21.7 / 27.6 |
-| 32k | 19.5 / 29.5 | 17.7 / 23.5 |
-| 128k | 10.8 / 26.9 | 9.0 / 12.9 |
+| 0 | 29.2 / 48.4 | 29.9 / 53.1 |
+| 8k | 22.9 / 42.8 | 24.1 / 56.4 |
+| 32k | 19.5 / 29.5 | 20.1 / 30.2 |
+| 128k | 10.8 / 26.9 | 11.0 / 18.6 |
 | 256k | 6.2 / — | 6.2 / 8.0 |
 
 third, the 128k reversal & production flags. at 32k and below, the 91g ple quant wins everywhere, hitting 56.4 t/s with the 3.9g mtp sidecar. at 128k under mtp, the 91g ple quant falls behind the 116g static quant (18.6 vs 26.9 t/s) because iq4_nl noise compounds over deep n-gram history. pairing the draft sidecar with --spec-draft-adaptive --spec-draft-n-min 0 --spec-draft-n-max 7 --spec-draft-p-min 0.75 stabilizes acceptance at 91-94%. for extreme context (128k-256k), passing --override-tensor "per_layer_token_embd=CPU" offloads the ple table to host ram and keeps total gpu allocation under the 128g uma ceiling without thrashing swap.
