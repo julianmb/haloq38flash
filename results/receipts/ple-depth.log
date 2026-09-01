@@ -1,0 +1,9 @@
+[12:32:52] === PLE depth A/B started ===
+depth0-plain       exit=0   Prompt: 92.5 t/s Generation: 29.9 t/s
+depth0-mtp         exit=0   Prompt: 87.0 t/s Generation: 53.1 t/s
+depth8k-plain      exit=0   Prompt: 480.0 t/s Generation: 24.1 t/s
+depth8k-mtp        exit=0   Prompt: 458.2 t/s Generation: 56.4 t/s
+depth32k-plain     exit=0   Prompt: 396.8 t/s Generation: 20.1 t/s
+depth32k-mtp       exit=0   Prompt: 379.2 t/s Generation: 30.2 t/s
+[12:39:47] depth bench done
+[12:39:48] === receipt committed+pushed — DONE ===

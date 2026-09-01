@@ -1,0 +1,14 @@
+[14:36:22] PLE 91g @ 256k:
+depth256k-plain    exit=0   Prompt: 139.6 t/s Generation: 6.2 t/s
+/home/user/source/haloq38flash/scripts/depth-bench-strix-halo-vulkan.sh: line 22: 1586220 Killed                  timeout 2400 "$BIN/llama-cli" -m "$TARGET" "${args[@]}" -dev Vulkan0 -ngl 999 -c "${PROMPT_CTX[$depth]}" -fa on -ub 2048 -ctk q8_0 -ctv q8_0 -n 128 --temp 0 --reasoning off -no-cnv -st --simple-io > "$log" 2>&1
+depth256k-mtp      exit=137  
+MTP 256k: requires lazy PLE (master build) for 256k MTP
+
+[2026-09-01 12:13 AEST] Protected 256k rerun (Vulkan, c=257024, ub=2048, timeout -k 30 2400)
+Preflight: llama-cli killed by exact name; 118Gi available, 0B swap used. mmproj build exited 0 but artifact is only 1536 bytes; /tmp/mmproj.log says n_tensors=0 (metadata only), not the expected 7.3G. It was not rebuilt.
+PLE plain existing log results/PLE-ub512-depth256k-plain.log: Generation: 6.2 t/s
+PLE MTP: oom_score_adj=500 verified for PID 18718; exit=134; no Generation line; Vulkan ErrorDeviceLost. max VmRSS=28357308 kB, max VmSwap=28632908 kB.
+STATIC plain: oom_score_adj=500 verified for PID 22814; exit=0; Generation: 6.2 t/s. max VmRSS=51008748 kB, max VmSwap=32665568 kB.
+STATIC MTP: oom_score_adj=500 verified for PID 34460; exit=134; no Generation line; Vulkan ErrorDeviceLost. max VmRSS=50836620 kB, max VmSwap=32665044 kB.
+Post-run: no llama-cli remains; 116Gi available, 2.8Gi swap used. VmSwap did not stay low during any run.
+256k MTP ngld0: no timing (exact command rejected --tensor-read-lazy; binary supports --lazy-mode)

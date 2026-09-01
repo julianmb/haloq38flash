@@ -1,0 +1,7 @@
+[13:24:21] static 116g @ 128k:
+depth128k-plain    exit=0   Prompt: 224.7 t/s Generation: 10.8 t/s
+depth128k-mtp      exit=0   Prompt: 216.8 t/s Generation: 26.9 t/s
+[13:41:49] PLE 91g @ 128k:
+depth128k-plain    exit=0   Prompt: 222.4 t/s Generation: 11.0 t/s
+depth128k-mtp      exit=0   Prompt: 214.0 t/s Generation: 18.6 t/s
+[13:58:43] ALL DONE

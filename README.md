@@ -150,8 +150,7 @@ add the mtp sidecar for speculative decoding:
 ```bash
 docker compose run qwen38-flash-next /app/llama-server \
   -md /models/mtp-Qwen3.8-Flash-Next-Q8_0.gguf \
-  --spec-type draft-mtp --spec-draft-adaptive \
-  --spec-draft-n-min 0 --spec-draft-n-max 7 --spec-draft-p-min 0.75
+  --spec-type draft-mtp --spec-draft-n-max 6 --spec-draft-p-min 0.75
 ```
 
 ### 262k context (ssd streaming or cpu ple offload)
@@ -162,12 +161,16 @@ stays on ssd (~2.5g resident), leaving room for the full context window:
 ```bash
 docker compose run qwen38-flash-next /app/llama-server \
   -m /models/Qwen3.8-Flash-Next-IQ4_XS.gguf \
-  -c 262144 -lm mmap --lazy-mode auto \
+  -c 262144 -lm mmap --tensor-read-lazy on \
   -ngl 999 -fa on -ctk q8_0 -ctv q8_0 -ub 2048 -t 4
 ```
 
 Alternatively, offload the PLE table to CPU memory to avoid swap pressure:
 `--override-tensor "per_layer_token_embd=CPU"`
+
+note: adaptive draft sizing (`--spec-draft-adaptive`) and `--lazy-mode auto`
+are merged-engine (`build-hq38`) options not in the packaged image — see
+`results/MANIFEST.md` for which engine produced which published number.
 
 ---
 

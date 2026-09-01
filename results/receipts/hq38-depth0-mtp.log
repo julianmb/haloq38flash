@@ -1,0 +1,54 @@
+ggml_vulkan: MUL_MAT_ID f16-B path engaged (GGML_VK_MMID_F16B)
+
+
+Loading model... 
+
+▄▄ ▄▄
+██ ██
+██ ██  ▀▀█▄ ███▄███▄  ▀▀█▄    ▄████ ████▄ ████▄
+██ ██ ▄█▀██ ██ ██ ██ ▄█▀██    ██    ██ ██ ██ ██
+██ ██ ▀█▄██ ██ ██ ██ ▀█▄██ ██ ▀████ ████▀ ████▀
+                                    ██    ██
+                                    ▀▀    ▀▀
+
+build      : b10888-081edc343
+model      : /mnt/ssd2/models/qwen38-flash-next/Qwen3.8-Flash-Next-IQ4_XS-PLE.gguf
+ftype      : IQ4_XS - 4.25 bpw
+modalities : text
+
+available commands:
+  /exit or Ctrl+C     stop or exit
+  /regen              regenerate the last response
+  /clear              clear the chat history
+  /read <file>        add a text file
+  /glob <pattern>     add text files using globbing pattern
+
+
+
+> Write a Python function that computes the nth Fibonacci number using memoization, with a docstring, type hints, and a short example.
+```python
+def fibonacci(n: int) -> int:
+    """
+    Compute the nth Fibonacci number using memoization.
+    
+    Args:
+        n: A non-negative integer representing the position in the Fibonacci sequence.
+        
+    Returns:
+        The nth Fibonacci number.
+        
+    Example:
+        >>> fibonacci(10)
+        55
+    """
+    memo: dict[int, int] = {}
+    
+    def fib(k: int) -> int:
+        if k < 0:
+            raise ValueError("n must be a non-negative integer")
+        if k
+
+[ Prompt: 70.2 t/s | Generation: 45.7 t/s ]
+
+
+Exiting...
