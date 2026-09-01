@@ -56,12 +56,15 @@ all STATIC/PLE/M2 sweep numbers → `results/2026-08-31-overnight-quant-bench.md
 + raw logs tarball `2026-08-31-overnight-quant-bench-logs.tar.gz`
 (sha256 `aec23e327a5d9637d6e11cb8e78d081dda35dcef7dd9951b112ffb1e3a236482`).
 
-## known-unproven claims
+## root-caused claims
 
-- **"greedy-oracle validated"**: plain vs mtp n=6 diverged by 28 unified
-  diff lines at temp 0 (`results/hq38-oracle-{plain,mtp-n6}.log`, local
-  only). root cause not yet identified — do not cite this claim until the
-  diff is explained or eliminated.
+- **"greedy-oracle validated"**: plain vs mtp n=6 diverged by 3 regions in
+  ~1000 chars at temp 0 — one docstring-line omission and one reordering of
+  two valid statements. root cause: batch-shape fp rounding flips the
+  target's own argmax at near-tie branches (drafts are target-verified;
+  divergence is never unverified draft text). 92.4% acceptance (219/237),
+  semantically equivalent output. full analysis:
+  `results/oracle-diff-analysis.md`.
 
 ## sha256 pins
 
