@@ -57,17 +57,53 @@ on this workload. high acceptance ≠ higher throughput when `n_min 0` drafts
 fewer tokens per cycle. treated as honest negative result — not shipped as
 a recommendation for prose.
 
-## n=3 variance A/B + ppl suite — chain stopped per user request
+## n=3 variance A/B — complete (24/24 runs, n=3 per cell)
 
-- n3 matrix (`bench-n3-ab.sh`: daily vs merged, 8k+128k, plain+mtp, n=3):
-  19/20 runs have valid `Generation` lines; one 128k-merged-mtp run empty
-  (89B) and the suite was stopped mid-128k block per user request. the 8k
-  block is fully complete and tight (see `results/n3-*.log`); 128k block is
-  partial. full median/spread summary deferred until the chain resumes.
-- ppl suite (`bench-ppl-quants.sh` on `wiki.test.raw`): failed on first run
-  with `invalid argument: 2048` (perplexity tool does not take `-ub`);
-  flag fixed locally (`-ub` removed) but rerun not yet executed — ppl table
-  pending.
+`bench-n3-ab.sh` on 91g ple, same fillers/bounded contexts as above, but
+`n=3` repeats per cell to bound same-config spread.
+
+| engine | depth | mode | tg median | tg spread | pp median |
+|--------|-------|------|-----------|-----------|-----------|
+| daily | 8k | plain | 24.0 | 23.9–24.1 | 413.9 |
+| daily | 8k | mtp | 33.8 | 33.8–34.3 | 395.3 |
+| daily | 128k | plain | 9.8 | 9.6–9.9 | 186.9 |
+| daily | 128k | mtp | 13.5 | 13.3–13.7 | 180.4 |
+| merged | 8k | plain | 22.0 | 22.0–22.2 | 408.5 |
+| merged | 8k | mtp | 27.4 | 26.9–27.4 | 386.0 |
+| merged | 128k | plain | 8.6 | 7.8–9.2 | 184.2 |
+| merged | 128k | mtp | 12.7 | 12.6–12.7 | 177.8 |
+
+finding: daily driver is consistently faster than merged on tg (e.g. 33.8
+vs 27.4 at 8k mtp, 13.5 vs 12.7 at 128k mtp), but both show tight spread at
+8k and wider at 128k (merged plain 7.8–9.2). receipts `results/n3-*.log`
++ `.mem.log` (24 logs, all with `Generation`).
+
+## ppl suite — wiki.test.raw, ctx 2048, `llama-perplexity` (vulkan, f16 kv)
+
+| quant | PPL | file | receipt |
+|-------|-----|------|---------|
+| M2 (imatrix, PLE Q8_0) | 4.2809 ±0.025 | 115G | `receipts/ppl-m2.log` |
+| PLE (IQ4_NL on 51B PLE) | 4.2932 ±0.025 | 91G | `receipts/ppl-ple.log` |
+| static (no PLE cut) | 4.5221 ±0.026 | 116G | `receipts/ppl-static.log` |
+
+`M2` wins, `PLE` is statistically tied (+0.012, <0.5σ) for 24 GB saved,
+both crush `static` (+0.24, ~9σ). corpus `wiki.test.raw` (1.29 MB from
+smerity, not the imatrix `corpus.txt`) — 145 chunks. bug `invalid
+argument: 2048` fixed by removing `-ub` from `bench-ppl-quants.sh`.
+
+## warm checkpoint bench — prompt cache reuse (official build)
+
+`ROCmFPX/build-rocmfpx` with `--cache-ram 8192` (your `0ef57fb` fix active).
+
+| prompt | cold prompt_ms | warm prompt_ms | speedup | cache hit | receipt |
+|--------|----------------|----------------|---------|-----------|---------|
+| 128k truncated (80k chars, 13,334 tokens) | 30,910 | 607 | **50.9×** | 13,330 cached, 4 reprocessed | `warm-128k-*.json` |
+| 128k full (786kB filler, 131,073 tokens) | 437,943 | 683 | **640×** | 131,069 cached, 4 reprocessed | `receipts/warm-full-128k-full-*.json` |
+| 256k full (1.53 MB filler, ~255k tokens) | ~694s @188k tokens then cancelled (timeout 1200s) | — | — | — | partial, needs longer timeout |
+
+full 128k is the headline: cold 438s → warm 0.68s. 256k cold timed out
+at 188k tokens after 11 min (`stop: cancel task`), will need a longer
+run for a complete warm pair.
 
 ## r/strixhalo draft — static 116g column
 

@@ -28,10 +28,10 @@ mem_mon() { # $1=pid $2=logfile
   MON=$!
 }
 
-run_ppl() { # $1=name $2=model $3=extra-flags... $4=timeout
-  local name=$1 model=$2 tmo=$4; shift 3
+run_ppl() { # $1=name $2=model $3=timeout $4...extra-flags
+  local name=$1 model=$2 tmo=$3; shift 3
   pgrep -x llama-cli >/dev/null && die "GPU busy: llama-cli running"
-  pgrep -x llama-perplexity >/dev/null && die "GPU busy: llama-perplexity running"
+  pgrep -f "llama-perplexity" >/dev/null && die "GPU busy: llama-perplexity running"
   log "=== ppl $name start ==="
   timeout -k 30 "$tmo" "$PERP" -m "$model" -f "$CORPUS" \
     -dev Vulkan0 -ngl 999 -fa on -t 4 "$@" \
@@ -52,16 +52,16 @@ run_ppl() { # $1=name $2=model $3=extra-flags... $4=timeout
 mkdir -p "$RES"
 # quality measurement: default f16 KV (no cache quant), consistent -fa on
 if [ "${1:-}" != "f16-only" ]; then
-  run_ppl ple    "$MDIR/Qwen3.8-Flash-Next-IQ4_XS-PLE.gguf" -c 2048 3600
-  run_ppl static "$MDIR/Qwen3.8-Flash-Next-IQ4_XS.gguf"     -c 2048 3600
-  run_ppl m2     "$MDIR/Qwen3.8-Flash-Next-IQ4_XS-M2.gguf"  -c 2048 3600
+  run_ppl ple    "$MDIR/Qwen3.8-Flash-Next-IQ4_XS-PLE.gguf" 3600 -c 2048
+  run_ppl static "$MDIR/Qwen3.8-Flash-Next-IQ4_XS.gguf"     3600 -c 2048
+  run_ppl m2     "$MDIR/Qwen3.8-Flash-Next-IQ4_XS-M2.gguf"  3600 -c 2048
 fi
 
 if [ -n "${1:-}" ]; then
   # F16 ground truth: 330G does not fit UMA — pure CPU, mmap, few chunks
   local_chunks=8
   [ "${1:-}" != "f16-only" ] && local_chunks="$1"
-  run_ppl f16 "$MDIR/Qwen3.8-Flash-Next-F16.gguf" -c 2048 -ngl 0 --chunks "$local_chunks" 7200
+  run_ppl f16 "$MDIR/Qwen3.8-Flash-Next-F16.gguf" 7200 -c 2048 -ngl 0 --chunks "$local_chunks"
 fi
 
 log "=== ppl suite done ==="
