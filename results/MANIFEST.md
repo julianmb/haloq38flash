@@ -78,6 +78,26 @@ vs 27.4 at 8k mtp, 13.5 vs 12.7 at 128k mtp), but both show tight spread at
 8k and wider at 128k (merged plain 7.8–9.2). receipts `results/n3-*.log`
 + `.mem.log` (24 logs, all with `Generation`).
 
+## nathan df1671a03 rebench — mixed, do not switch yet
+
+`llama.cpp-strix-halo-vulkan-df1671` @ `df1671a03` (kv-cache scan opts,
+qwen4exp indexer fixes, vulkan tuning) vs `ad914eb` n=3 medians, same
+91g ple / fillers / flags. receipts `results/nathan-df1671-*.log`.
+
+| cell | df1671a03 pp / tg | ad914eb median | delta |
+|------|-------------------|----------------|-------|
+| 8k plain | 586.5 / 25.9 | 413.9 / 24.0 | pp +42%, tg +8% |
+| 8k mtp | 509.1 / 25.6, 513.5 / 28.9 (n=2) | 395.3 / 33.8 | pp +29%, tg −15–24% |
+| 128k plain | 367.1 / 9.9 | 186.9 / 9.8 | pp +96%, tg +1% |
+| 128k mtp | killed, swap 0→1.7 GB cliff | 180.4 / 13.5 | FAIL |
+
+findings: prefill massively faster (kv-cache scan opts deliver as
+advertised); MTP decode regressed at 8k (both runs below the old tight
+33.8–34.3 band — thermal confound possible after hours of sustained load,
+needs interleaved A/B); 128k MTP swap cliff (0→358 MB→1.7 GB in 60 s,
+guard kill) is a hard memory regression (`ad914eb` ran clean).
+verdict: do not switch daily driver yet; file upstream with receipts.
+
 ## ppl suite — wiki.test.raw, ctx 2048, `llama-perplexity` (vulkan, f16 kv)
 
 | quant | PPL | file | receipt |
