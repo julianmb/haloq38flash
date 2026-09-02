@@ -1,0 +1,7 @@
+2026-09-02T09:27:56+10:00 attempt=1 batch=512 guard llama-cli=0 llama-server=0
+command: timeout -k 30 2400 /home/user/source/llamacpp-master/build-hq38/bin/llama-cli -m /mnt/ssd2/models/qwen38-flash-next/Qwen3.8-Flash-Next-IQ4_XS-PLE.gguf -f /home/user/source/haloq38flash/results/filler/filler-8k.txt -c 16384 -md /mnt/ssd2/models/qwen38-flash-next/mtp-Qwen3.8-Flash-Next-Q8_0.gguf --spec-type draft-mtp --spec-draft-adaptive --spec-draft-n-min 0 --spec-draft-n-max 7 --spec-draft-p-min 0.75 -dev Vulkan0 -ngl 999 -fa on -ub 2048 -ctk q8_0 -ctv q8_0 -t 4 -n 128 --temp 0 --reasoning off -st --simple-io
+2026-09-02T09:27:56+10:00 PID=205260 oom_score_adj=500
+2026-09-02T09:27:56+10:00 PID=205260 VmRSS=46308kB VmSwap=0kB
+2026-09-02T09:28:26+10:00 PID=205260 VmRSS=756508kB VmSwap=0kB
+2026-09-02T09:28:56+10:00 attempt=1 exit=0 swap_killed=0
+2026-09-02T09:28:56+10:00 RESULT=completed

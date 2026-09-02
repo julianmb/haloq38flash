@@ -39,6 +39,36 @@ swap-dies at 256k mtp (exit 137).
 receipts `receipts/hq38-depth*.log`, summarized in the committed
 `results/2026-08-31-merged-engine-256k.md`.
 
+## adaptive MTP sweep (merged engine, --spec-draft-adaptive) — not in readme table
+
+same 91g ple quant, same bounded contexts/fillers as above, but
+`--spec-draft-adaptive --spec-draft-n-min 0 --spec-draft-n-max 7 --spec-draft-p-min 0.75`
+instead of static `n_max 6`.
+
+| depth | adaptive pp / tg | static ref pp / tg | delta tg | receipt |
+|------:|-----------------:|-------------------:|---------:|---------|
+| 0k | 66.7 / 37.8 | 70.2 / 45.7 | −17% | `receipts/hq38-adaptive-depth0.log` |
+| 8k | 388.8 / 22.5 | 464.8 / 27.6 | −18% | `receipts/hq38-adaptive-depth8k.log` |
+| 32k | 277.0 / 21.6 | 382.5 / 23.5 | −8% | `receipts/hq38-adaptive-depth32k.log` |
+| 128k | 178.7 / 11.5 | 257.2 / 12.9 | −11% | `receipts/hq38-adaptive-depth128k.log` |
+
+finding: adaptive loses to static `n_max 6` on generic prose at every depth
+on this workload. high acceptance ≠ higher throughput when `n_min 0` drafts
+fewer tokens per cycle. treated as honest negative result — not shipped as
+a recommendation for prose.
+
+## n=3 variance A/B + ppl suite — chain stopped per user request
+
+- n3 matrix (`bench-n3-ab.sh`: daily vs merged, 8k+128k, plain+mtp, n=3):
+  19/20 runs have valid `Generation` lines; one 128k-merged-mtp run empty
+  (89B) and the suite was stopped mid-128k block per user request. the 8k
+  block is fully complete and tight (see `results/n3-*.log`); 128k block is
+  partial. full median/spread summary deferred until the chain resumes.
+- ppl suite (`bench-ppl-quants.sh` on `wiki.test.raw`): failed on first run
+  with `invalid argument: 2048` (perplexity tool does not take `-ub`);
+  flag fixed locally (`-ub` removed) but rerun not yet executed — ppl table
+  pending.
+
 ## r/strixhalo draft — static 116g column
 
 | cell | published | receipt |
@@ -84,3 +114,11 @@ all STATIC/PLE/M2 sweep numbers → `results/2026-08-31-overnight-quant-bench.md
 | `hq38-depth128k-plain.log` | `edf695976a26c219` |
 | `hq38-depth128k-mtp.log` | `7fe8a82d7e241896` |
 | `hq38-depth256k-plain.log` | `b8200ba47f94ad59` |
+| `hq38-adaptive-depth0.log` | `420efff78243bdee` |
+| `hq38-adaptive-depth0.mem.log` | `8dee2d23580503fd` |
+| `hq38-adaptive-depth8k.log` | `0b6433d963066df0` |
+| `hq38-adaptive-depth8k.mem.log` | `e388f0b7abc3d942` |
+| `hq38-adaptive-depth32k.log` | `01f2d1a0d3374d25` |
+| `hq38-adaptive-depth32k.mem.log` | `6edd80e481fcd4bb` |
+| `hq38-adaptive-depth128k.log` | `cb37ddd3535ed1e3` |
+| `hq38-adaptive-depth128k.mem.log` | `43e1421de5c991f9` |
