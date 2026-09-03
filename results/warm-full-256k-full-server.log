@@ -1,0 +1,153 @@
+0.00.036.296 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.036.582 W srv  llama_server: -----------------
+0.00.036.583 W srv  llama_server: CORS is set to allow all origins ('*') and no API key is set
+0.00.036.583 W srv  llama_server: this can be a security risk (cross-origin attacks)
+0.00.036.583 W srv  llama_server: more info: https://github.com/ggml-org/llama.cpp/pull/25655
+0.00.036.583 W srv  llama_server: -----------------
+0.00.037.819 I srv    load_model: loading model '/mnt/ssd2/models/qwen38-flash-next/Qwen3.8-Flash-Next-IQ4_XS-PLE.gguf'
+0.28.262.833 I cmn          init: llama threadpool init, n_threads = 16
+0.28.603.046 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 257024, kv_unified = 'false'
+0.28.605.876 W srv          init: chat template supports preserving reasoning, it is enabled by default (may use more tokens, disable via --no-reasoning-preserve)
+0.28.605.922 I srv  llama_server: model loaded
+0.28.605.927 I srv  llama_server: listening on http://127.0.0.1:18080
+0.30.336.635 I slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1
+0.30.336.808 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+0.34.103.701 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   2048, progress = 0.01, t =   3.77 s / 543.70 tokens per second
+0.38.713.878 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   4096, progress = 0.02, t =   8.38 s / 488.96 tokens per second
+0.43.184.911 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   6144, progress = 0.02, t =  12.85 s / 478.21 tokens per second
+0.47.693.036 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   8192, progress = 0.03, t =  17.36 s / 471.99 tokens per second
+0.52.311.956 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  10240, progress = 0.04, t =  21.98 s / 465.98 tokens per second
+0.57.002.859 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  12288, progress = 0.05, t =  26.67 s / 460.81 tokens per second
+1.02.024.486 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  14336, progress = 0.06, t =  31.69 s / 452.42 tokens per second
+1.06.976.585 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  16384, progress = 0.06, t =  36.64 s / 447.16 tokens per second
+1.12.016.028 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  18432, progress = 0.07, t =  41.68 s / 442.24 tokens per second
+1.17.091.026 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  20480, progress = 0.08, t =  46.75 s / 438.04 tokens per second
+1.22.274.694 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  22528, progress = 0.09, t =  51.94 s / 433.75 tokens per second
+1.27.482.228 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  24576, progress = 0.10, t =  57.15 s / 430.06 tokens per second
+1.32.728.894 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  26624, progress = 0.10, t =  62.39 s / 426.72 tokens per second
+1.38.007.184 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  28672, progress = 0.11, t =  67.67 s / 423.70 tokens per second
+1.43.298.914 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  30720, progress = 0.12, t =  72.96 s / 421.04 tokens per second
+1.48.726.539 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  32768, progress = 0.13, t =  78.39 s / 418.01 tokens per second
+1.54.341.271 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  34816, progress = 0.14, t =  84.00 s / 414.45 tokens per second
+2.00.336.898 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  36864, progress = 0.14, t =  90.00 s / 409.60 tokens per second
+2.06.331.181 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  38912, progress = 0.15, t =  95.99 s / 405.36 tokens per second
+2.12.205.960 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  40960, progress = 0.16, t = 101.87 s / 402.08 tokens per second
+2.18.031.921 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  43008, progress = 0.17, t = 107.70 s / 399.35 tokens per second
+2.23.894.608 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  45056, progress = 0.18, t = 113.56 s / 396.77 tokens per second
+2.29.793.448 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  47104, progress = 0.18, t = 119.46 s / 394.32 tokens per second
+2.35.734.330 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  49152, progress = 0.19, t = 125.40 s / 391.97 tokens per second
+2.41.702.145 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  51200, progress = 0.20, t = 131.37 s / 389.75 tokens per second
+2.47.702.026 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  53248, progress = 0.21, t = 137.37 s / 387.64 tokens per second
+2.53.840.773 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  55296, progress = 0.22, t = 143.50 s / 385.33 tokens per second
+3.00.053.857 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  57344, progress = 0.22, t = 149.72 s / 383.02 tokens per second
+3.06.387.800 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  59392, progress = 0.23, t = 156.05 s / 380.59 tokens per second
+3.12.882.035 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  61440, progress = 0.24, t = 162.55 s / 377.99 tokens per second
+3.19.473.612 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  63488, progress = 0.25, t = 169.14 s / 375.36 tokens per second
+3.26.019.246 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  65536, progress = 0.26, t = 175.68 s / 373.04 tokens per second
+3.32.582.481 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  67584, progress = 0.26, t = 182.25 s / 370.84 tokens per second
+3.39.213.738 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  69632, progress = 0.27, t = 188.88 s / 368.66 tokens per second
+3.45.917.552 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  71680, progress = 0.28, t = 195.58 s / 366.50 tokens per second
+3.52.663.913 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  73728, progress = 0.29, t = 202.33 s / 364.40 tokens per second
+3.59.600.692 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  75776, progress = 0.30, t = 209.26 s / 362.11 tokens per second
+4.06.595.250 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  77824, progress = 0.30, t = 216.26 s / 359.87 tokens per second
+4.13.600.839 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  79872, progress = 0.31, t = 223.26 s / 357.75 tokens per second
+4.20.708.841 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  81920, progress = 0.32, t = 230.37 s / 355.60 tokens per second
+4.27.790.138 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  83968, progress = 0.33, t = 237.45 s / 353.62 tokens per second
+4.34.963.597 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  86016, progress = 0.34, t = 244.63 s / 351.62 tokens per second
+4.42.253.892 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  88064, progress = 0.34, t = 251.92 s / 349.58 tokens per second
+4.49.464.503 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  90112, progress = 0.35, t = 259.13 s / 347.75 tokens per second
+4.56.672.890 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  92160, progress = 0.36, t = 266.34 s / 346.03 tokens per second
+5.03.897.843 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  94208, progress = 0.37, t = 273.56 s / 344.38 tokens per second
+5.11.415.439 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  96256, progress = 0.38, t = 281.08 s / 342.45 tokens per second
+5.19.169.457 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens =  98304, progress = 0.38, t = 288.83 s / 340.35 tokens per second
+5.26.427.868 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 100352, progress = 0.39, t = 296.09 s / 338.92 tokens per second
+5.33.754.955 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 102400, progress = 0.40, t = 303.42 s / 337.49 tokens per second
+5.40.989.037 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 104448, progress = 0.41, t = 310.65 s / 336.22 tokens per second
+5.48.223.817 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 106496, progress = 0.42, t = 317.89 s / 335.01 tokens per second
+5.55.530.297 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 108544, progress = 0.42, t = 325.19 s / 333.78 tokens per second
+6.02.873.834 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 110592, progress = 0.43, t = 332.54 s / 332.57 tokens per second
+6.10.235.182 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 112640, progress = 0.44, t = 339.90 s / 331.39 tokens per second
+6.17.547.920 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 114688, progress = 0.45, t = 347.21 s / 330.31 tokens per second
+6.24.978.669 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 116736, progress = 0.46, t = 354.64 s / 329.17 tokens per second
+6.32.472.240 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 118784, progress = 0.46, t = 362.14 s / 328.01 tokens per second
+6.40.074.231 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 120832, progress = 0.47, t = 369.74 s / 326.80 tokens per second
+6.47.734.111 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 122880, progress = 0.48, t = 377.40 s / 325.60 tokens per second
+6.55.333.380 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 124928, progress = 0.49, t = 385.00 s / 324.49 tokens per second
+7.03.198.388 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 126976, progress = 0.50, t = 392.86 s / 323.21 tokens per second
+7.10.808.947 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 129024, progress = 0.50, t = 400.47 s / 322.18 tokens per second
+7.18.314.822 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 131072, progress = 0.51, t = 407.98 s / 321.27 tokens per second
+7.25.965.929 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 133120, progress = 0.52, t = 415.63 s / 320.29 tokens per second
+7.33.822.400 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 135168, progress = 0.53, t = 423.49 s / 319.18 tokens per second
+7.41.835.119 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 137216, progress = 0.54, t = 431.50 s / 318.00 tokens per second
+7.49.737.655 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 139264, progress = 0.54, t = 439.40 s / 316.94 tokens per second
+7.57.689.418 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 141312, progress = 0.55, t = 447.35 s / 315.89 tokens per second
+8.05.539.412 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 143360, progress = 0.56, t = 455.20 s / 314.94 tokens per second
+8.13.787.521 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 145408, progress = 0.57, t = 463.45 s / 313.75 tokens per second
+8.21.981.865 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 147456, progress = 0.58, t = 471.64 s / 312.64 tokens per second
+8.30.183.227 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 149504, progress = 0.58, t = 479.85 s / 311.57 tokens per second
+8.38.548.933 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 151552, progress = 0.59, t = 488.21 s / 310.42 tokens per second
+8.46.890.693 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 153600, progress = 0.60, t = 496.55 s / 309.33 tokens per second
+8.55.745.038 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 155648, progress = 0.61, t = 505.41 s / 307.96 tokens per second
+9.05.003.954 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 157696, progress = 0.62, t = 514.67 s / 306.40 tokens per second
+9.14.325.978 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 159744, progress = 0.62, t = 523.99 s / 304.86 tokens per second
+9.22.932.225 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 161792, progress = 0.63, t = 532.60 s / 303.78 tokens per second
+9.31.561.344 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 163840, progress = 0.64, t = 541.22 s / 302.72 tokens per second
+9.40.126.938 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 165888, progress = 0.65, t = 549.79 s / 301.73 tokens per second
+9.49.115.356 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 167936, progress = 0.66, t = 558.78 s / 300.54 tokens per second
+9.57.774.068 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 169984, progress = 0.66, t = 567.44 s / 299.56 tokens per second
+10.06.885.409 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 172032, progress = 0.67, t = 576.55 s / 298.38 tokens per second
+10.15.725.775 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 174080, progress = 0.68, t = 585.39 s / 297.37 tokens per second
+10.24.841.688 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 176128, progress = 0.69, t = 594.50 s / 296.26 tokens per second
+10.33.871.314 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 178176, progress = 0.70, t = 603.53 s / 295.22 tokens per second
+10.43.512.163 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 180224, progress = 0.70, t = 613.18 s / 293.92 tokens per second
+10.52.987.686 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 182272, progress = 0.71, t = 622.65 s / 292.74 tokens per second
+11.02.176.934 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 184320, progress = 0.72, t = 631.84 s / 291.72 tokens per second
+11.11.279.254 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 186368, progress = 0.73, t = 640.94 s / 290.77 tokens per second
+11.20.480.097 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 188416, progress = 0.74, t = 650.14 s / 289.81 tokens per second
+11.29.821.098 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 190464, progress = 0.74, t = 659.48 s / 288.81 tokens per second
+11.39.611.905 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 192512, progress = 0.75, t = 669.28 s / 287.64 tokens per second
+11.49.983.756 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 194560, progress = 0.76, t = 679.65 s / 286.27 tokens per second
+11.59.973.237 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 196608, progress = 0.77, t = 689.64 s / 285.09 tokens per second
+12.09.966.273 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 198656, progress = 0.78, t = 699.63 s / 283.94 tokens per second
+12.19.610.997 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 200704, progress = 0.78, t = 709.27 s / 282.97 tokens per second
+12.29.993.859 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 202752, progress = 0.79, t = 719.66 s / 281.73 tokens per second
+12.39.885.885 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 204800, progress = 0.80, t = 729.55 s / 280.72 tokens per second
+12.50.005.280 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 206848, progress = 0.81, t = 739.67 s / 279.65 tokens per second
+12.59.650.202 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 208896, progress = 0.82, t = 749.31 s / 278.78 tokens per second
+13.09.568.812 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 210944, progress = 0.82, t = 759.23 s / 277.84 tokens per second
+13.19.298.141 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 212992, progress = 0.83, t = 768.96 s / 276.99 tokens per second
+13.29.686.336 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 215040, progress = 0.84, t = 779.35 s / 275.92 tokens per second
+13.40.486.513 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 217088, progress = 0.85, t = 790.15 s / 274.74 tokens per second
+13.51.565.471 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 219136, progress = 0.86, t = 801.23 s / 273.50 tokens per second
+14.01.978.803 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 221184, progress = 0.86, t = 811.64 s / 272.51 tokens per second
+14.11.930.741 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 223232, progress = 0.87, t = 821.59 s / 271.71 tokens per second
+14.22.080.031 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 225280, progress = 0.88, t = 831.74 s / 270.85 tokens per second
+14.32.150.513 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 227328, progress = 0.89, t = 841.81 s / 270.05 tokens per second
+14.42.608.494 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 229376, progress = 0.90, t = 852.27 s / 269.13 tokens per second
+14.52.949.195 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 231424, progress = 0.90, t = 862.61 s / 268.28 tokens per second
+15.03.438.252 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 233472, progress = 0.91, t = 873.10 s / 267.41 tokens per second
+15.13.719.545 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 235520, progress = 0.92, t = 883.38 s / 266.61 tokens per second
+15.24.148.522 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 237568, progress = 0.93, t = 893.81 s / 265.79 tokens per second
+15.34.781.778 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 239616, progress = 0.94, t = 904.44 s / 264.93 tokens per second
+15.46.153.191 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 241664, progress = 0.95, t = 915.82 s / 263.88 tokens per second
+15.56.794.251 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 243712, progress = 0.95, t = 926.46 s / 263.06 tokens per second
+16.07.326.806 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 245760, progress = 0.96, t = 936.99 s / 262.29 tokens per second
+16.17.882.128 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 247808, progress = 0.97, t = 947.55 s / 261.53 tokens per second
+16.28.354.755 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 249856, progress = 0.98, t = 958.02 s / 260.81 tokens per second
+16.39.084.701 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 251904, progress = 0.99, t = 968.75 s / 260.03 tokens per second
+16.50.898.484 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 253952, progress = 0.99, t = 980.56 s / 258.99 tokens per second
+16.59.638.614 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 255202, progress = 1.00, t = 989.30 s / 257.96 tokens per second
+17.02.311.809 I slot print_timing: id  0 | task 0 | prompt processing, n_tokens = 255714, progress = 1.00, t = 991.97 s / 257.78 tokens per second
+17.04.802.756 I slot print_timing: id  0 | task 0 | prompt eval time =  994465.90 ms / 255718 tokens (    3.89 ms per token,   257.14 tokens per second)
+17.04.802.760 I slot print_timing: id  0 | task 0 |        eval time =       0.00 ms /     1 tokens (    0.00 ms per token,     0.00 tokens per second)
+17.04.802.761 I slot print_timing: id  0 | task 0 |       total time =  994465.90 ms / 255719 tokens
+17.04.802.768 I slot print_timing: id  0 | task 0 |    graphs reused =          1
+17.04.804.977 I slot      release: id  0 | task 0 | stop processing: n_tokens = 255718, truncated = 0
+17.16.954.214 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 1.000 (> 0.100 thold), f_keep = 1.000
+17.16.954.357 I slot launch_slot_: id  0 | task 128 | processing task, is_child = 0
+17.17.690.799 I slot print_timing: id  0 | task 128 | prompt eval time =     736.41 ms /     4 tokens (  184.10 ms per token,     5.43 tokens per second)
+17.17.690.804 I slot print_timing: id  0 | task 128 |        eval time =       0.00 ms /     1 tokens (    0.00 ms per token,     0.00 tokens per second)
+17.17.690.805 I slot print_timing: id  0 | task 128 |       total time =     736.41 ms /     5 tokens
+17.17.690.807 I slot print_timing: id  0 | task 128 |    graphs reused =          2
+17.17.692.872 I slot      release: id  0 | task 128 | stop processing: n_tokens = 255718, truncated = 0
+17.22.852.407 I srv    operator(): operator(): cleaning up before exit...

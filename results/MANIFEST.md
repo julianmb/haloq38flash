@@ -119,11 +119,12 @@ argument: 2048` fixed by removing `-ub` from `bench-ppl-quants.sh`.
 |--------|----------------|----------------|---------|-----------|---------|
 | 128k truncated (80k chars, 13,334 tokens) | 30,910 | 607 | **50.9×** | 13,330 cached, 4 reprocessed | `warm-128k-*.json` |
 | 128k full (786kB filler, 131,073 tokens) | 437,943 | 683 | **640×** | 131,069 cached, 4 reprocessed | `receipts/warm-full-128k-full-*.json` |
-| 256k full (1.53 MB filler, ~255k tokens) | ~694s @188k tokens then cancelled (timeout 1200s) | — | — | — | partial, needs longer timeout |
+| 256k full (1.53 MB filler, 255,718 tokens) | 994,466 | 736 | **1351×** | 255,714 cached, 4 reprocessed | `results/warm-full-256k-full-*.json` |
 
-full 128k is the headline: cold 438s → warm 0.68s. 256k cold timed out
-at 188k tokens after 11 min (`stop: cancel task`), will need a longer
-run for a complete warm pair.
+256k is the headline: cold 994s → warm 0.74s (first attempt died at 188k
+tokens on a 300s wrapper timeout — operator error, not engine; reran with
+a 2400s cap). warm cost is ~constant (~0.6–0.7s) while cold scales with
+context, so the ratio grows with depth.
 
 ## r/strixhalo draft — static 116g column
 
