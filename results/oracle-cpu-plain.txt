@@ -1,0 +1,60 @@
+```python
+from functools import lru_cache
+from typing import Dict
+
+
+def fibonacci(n: int, memo: Dict[int, int] = None) -> int:
+    """
+    Compute the nth Fibonacci number using memoization.
+
+    Args:
+        n: A non-negative integer representing the position in the Fibonacci sequence.
+        memo: A dictionary used to cache previously computed Fibonacci numbers.
+
+    Returns:
+        The nth Fibonacci number.
+
+    Raises:
+        ValueError: If n is negative.
+
+    Example:
+        >>> fibonacci(10)
+        55
+        >>> fibonacci(0)
+        0
+        >>> fibonacci(1)
+        1
+    """
+    if n < 0:
+        raise ValueError("n must be a non-negative integer")
+
+    if memo is None:
+        memo = {}
+
+    if n in memo:
+        return memo[n]
+
+    if n == 0:
+        return 0
+    if n == 1:
+        return 1
+
+    memo[n] = fibonacci(n - 1, memo) + fibonacci(n - 2, memo)
+    return memo[n]
+
+
+if __name__ == "__main__":
+    # Example usage
+    print(fibonacci(10))  # Output: 55
+    print(fibonacci(20))  # Output: 6765
+```
+
+## How the Memoization Cache Works
+
+Memoization is an optimization technique that stores the results of expensive function calls and returns the cached result when the same inputs occur again.
+
+**Step-by-step explanation:**
+
+1. **Cache Initialization**: The `memo` dictionary starts empty (or is passed in from a previous call). It maps Fibonacci indices to their computed values.
+
+2. **Base Cases**: For `n = 0` and `n = 1`, the function

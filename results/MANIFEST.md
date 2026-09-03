@@ -151,6 +151,18 @@ all STATIC/PLE/M2 sweep numbers → `results/2026-08-31-overnight-quant-bench.md
   divergence is never unverified draft text). 92.4% acceptance (219/237),
   semantically equivalent output. full analysis:
   `results/oracle-diff-analysis.md`.
+- **strict-mtp bit-exact (NEW, valid proof)**: `--spec-mtp-strict-qwen` on
+  the ported blessed build, CPU backend, coherent fibonacci prompt, temp 0,
+  seed 0 — plain 400 tokens @ 13.3 t/s vs strict 400 tokens @ 12.9 t/s,
+  `diff` **0 lines** (both 1473 bytes). receipts `oracle-cpu-*.json/.txt`,
+  `oracle-cpu-strict-server.log`, `oracle-cpu-diff.log` (empty). strict uses
+  serial target verification (exactness, not speed).
+- **blessed-Vulkan qwen4exp miscompute (NEW)**: same prompt/model gives
+  clean code on CPU and old-Nathan-Vulkan but rambling garbage on
+  blessed-Vulkan (suspect: f16-B MMID path). port and model code
+  exonerated (pristine build behaves identically). all published vulkan
+  numbers stay on `ad914eb`. full analysis:
+  `results/vulkan-qwen4exp-miscompute.md`.
 
 ## sha256 pins
 
