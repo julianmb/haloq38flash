@@ -62,6 +62,17 @@ need 262k context.
 > same-config mtp runs spread up to ~40%: 56.4 vs 33.5 t/s at 8k across two
 > sweeps. peaks are peaks, not medians.
 
+n=3 confirmation (same flags, daily-driver vs merged engine, median [spread]).
+the table above stays as the peak record; this one bounds the variance:
+
+| engine | 8k plain tg | 8k mtp tg | 128k plain tg | 128k mtp tg |
+|--------|-------------|-----------|---------------|-------------|
+| daily driver | 24.0 [23.9–24.1] | 33.8 [33.8–34.3] | 9.8 [9.6–9.9] | 13.5 [13.3–13.7] |
+| merged | 22.0 [22.0–22.2] | 27.4 [26.9–27.4] | 8.6 [7.8–9.2] | 12.7 [12.6–12.7] |
+
+daily driver wins every cell; 8k is tight, 128k spreads wider. receipts:
+`results/n3-*.log` (24 runs), pinned in `results/MANIFEST.md`.
+
 <details>
 <summary><b>the 128k reversal — the PLE quant loses under MTP at depth</b></summary>
 
