@@ -98,6 +98,23 @@ needs interleaved A/B); 128k MTP swap cliff (0→358 MB→1.7 GB in 60 s,
 guard kill) is a hard memory regression (`ad914eb` ran clean).
 verdict: do not switch daily driver yet; file upstream with receipts.
 
+## gain probes — reddit-sourced flags, all negative or blocked (2026-09-04)
+
+probes chasing stereohype/digamma claims from the StrixHalo post. receipts
+`results/probe-*`.
+
+| probe | result | verdict |
+|-------|--------|---------|
+| `-b 8192` prefill (2x 8k plain) | 398.7, 410.7 pp / 23.7, 23.8 tg vs 413.9 / 24.0 ref | no gain, at/below reference |
+| unsloth shared MTP sidecar (2.79G) | load fails: `token_embd.weight not found` on ad914eb | needs shared-embedding loader (myhacsint b10685 has it); only 1.1G saving vs our 3.9G, parked |
+| blessed-Vulkan + `--reasoning-effort medium --reasoning-budget 2048` | reasoning_content itself is gibberish, content empty | kernel-miscompute theory stands |
+
+the third probe kills the cheap explanation for the blessed-Vulkan garbage:
+with the reasoning budget pinned to 2048 the corruption shows up inside
+the model's own thinking text, so it is a Vulkan compute-path defect, not
+thinking-budget dynamics. stereohype's flags remain correct practice for
+serving healthy builds (they prevent empty content) but do not fix ours.
+
 ## nathan ea35c5066 validation — regression confirmed, still do not switch
 
 `llama.cpp-strix-halo-vulkan-ea35c5` @ `ea35c5066` (stale-KV zeroing, FA
