@@ -1,0 +1,36 @@
+2026-09-04T15:06:27+10:00
+command: timeout -k 30 2400 /home/user/source/llama.cpp-strix-halo-vulkan-ea35c5/build/bin/llama-cli -m /mnt/ssd2/models/qwen38-flash-next/Qwen3.8-Flash-Next-IQ4_XS-PLE.gguf -f /home/user/source/haloq38flash/results/filler/filler-8k.txt -c 16384 -md /mnt/ssd2/models/qwen38-flash-next/mtp-Qwen3.8-Flash-Next-Q8_0.gguf --spec-type draft-mtp\,ngram-simple --spec-draft-n-max 6 --spec-draft-p-min 0.75 -dev Vulkan0 -ngl 999 -fa on -ub 2048 -ctk q8_0 -ctv q8_0 -t 4 -n 128 --temp 0 --reasoning off -st --simple-io
+ggml_vulkan: MUL_MAT_ID f16-B path engaged (GGML_VK_MMID_F16B)
+
+
+Loading model... 
+
+▄▄ ▄▄
+██ ██
+██ ██  ▀▀█▄ ███▄███▄  ▀▀█▄    ▄████ ████▄ ████▄
+██ ██ ▄█▀██ ██ ██ ██ ▄█▀██    ██    ██ ██ ██ ██
+██ ██ ▀█▄██ ██ ██ ██ ▀█▄██ ██ ▀████ ████▀ ████▀
+                                    ██    ██
+                                    ▀▀    ▀▀
+
+build      : b10658-ea35c5066
+model      : /mnt/ssd2/models/qwen38-flash-next/Qwen3.8-Flash-Next-IQ4_XS-PLE.gguf
+ftype      : IQ4_XS - 4.25 bpw
+modalities : text
+
+available commands:
+  /exit or Ctrl+C     stop or exit
+  /regen              regenerate the last response
+  /clear              clear the chat history
+  /read <file>        add a text file
+  /glob <pattern>     add text files using globbing pattern
+
+
+
+> hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello he ... (truncated)
+Hello! It sounds like you're in a very enthusiastic mood. How can I help you today?
+
+[ Prompt: 501.7 t/s | Generation: 29.0 t/s ]
+
+
+Exiting...

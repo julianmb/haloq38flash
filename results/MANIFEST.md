@@ -98,6 +98,28 @@ needs interleaved A/B); 128k MTP swap cliff (0→358 MB→1.7 GB in 60 s,
 guard kill) is a hard memory regression (`ad914eb` ran clean).
 verdict: do not switch daily driver yet; file upstream with receipts.
 
+## nathan ea35c5066 validation — regression confirmed, still do not switch
+
+`llama.cpp-strix-halo-vulkan-ea35c5` @ `ea35c5066` (stale-KV zeroing, FA
+dequant layout fix, deterministic top-k) vs same references. receipts
+`results/ea35c5-*.log`.
+
+| test | ea35c5066 pp / tg | reference | verdict |
+|------|-------------------|-----------|---------|
+| 8k mtp n=6 (n=3) | 506–530 / **29.1, 29.1, 29.0** | 33.8–34.3 | −14%, regression stands |
+| 128k mtp n=6 | killed, swap 0→1.3 GB→3.2 GB | 180.4 / 13.5 | FAIL, worse trajectory |
+| 8k mtp n=5 | 528.0 / 26.1 | n=6 29.1 | n=6 stays |
+| 8k mtp+ngram | 501.7 / 29.0 | n=6 29.1 | no gain from stacking |
+
+findings: the determinism fixes work (three identical 29.1s — variance
+gone), which sharpens rather than excuses the regression: −14% vs the old
+band is now a clean signal, thermal confound largely excluded by
+repeatability. 128k memory blowup is worse than df1671a03 (3.2 GB vs
+1.7 GB). n=6 beats n=5 here (differs from Unsloth/stereohype setups —
+engine-specific); ngram stacking adds nothing.
+verdict: do not switch; the MTP decode + 128k memory regressions are real
+and belong in the upstream issue with these receipts.
+
 ## ppl suite — wiki.test.raw, ctx 2048, `llama-perplexity` (vulkan, f16 kv)
 
 | quant | PPL | file | receipt |
