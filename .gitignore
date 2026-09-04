@@ -1,4 +1,5 @@
 models/
+repos/
 weights
 .codegraph
 .omo/
