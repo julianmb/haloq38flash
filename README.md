@@ -93,6 +93,7 @@ single runs, n=1 caveat. pick your file by use case — see the table above.
 |------|------|:------------:|
 | `...-IQ4_XS-`**`PLE`**`.gguf` | 91 giB | ctx ≤ 32k — wins everywhere, mtp to 56 t/s |
 | `...-IQ4_XS.gguf` | 116 giB | ctx ≥ 128k — faster mtp at depth, wider fork compat |
+| `...-IQ4_XS-`**`M2`**`.gguf` | 115 giB | best measured perplexity (4.2809) — quality-first serving, fastest 32k mtp of the three |
 | `mtp-...-Q8_0.gguf` | 3.9 giB | mtp sidecar, required for the speed numbers |
 
 <details>

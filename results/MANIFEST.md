@@ -178,6 +178,17 @@ use it for ingestion/warm-cache rebuilds; decode is indifferent. Nathan
 df1671a03's prefill (+96% → 367.1) still beats it (+43% → 267.1), so the
 engine switch stays blocked on his MTP regression, not on prefill.
 
+## local artifact cleanup (2026-09-04)
+
+M2 published to hf (julianmb/Qwen3.8-Flash-Next-IQ4_XS-GGUF) and
+byte-verified: sha256 `0eaaf06a8e226cb5…` = remote lfs oid. deleted
+locally: F16 (329.7g — the f16-ppl ground-truth parked item retires with
+it; regeneration path = official fp8 + our converter), ROCmFP4_FAST
+(113.1g, parked plugin experiment), sidecar variants Q4_K/Q5_K/shared-Q8_0
+(8.1g, receipts in tier1 above), M2 local copy (114.6g). ssd2: 43g free →
+**609g free**. remaining local: PLE 91g, static 116g, sidecar Q8_0 3.9g,
+imatrix 0.5g, mmproj 0.8g.
+
 ## ppl suite — wiki.test.raw, ctx 2048, `llama-perplexity` (vulkan, f16 kv)
 
 | quant | PPL | file | receipt |
