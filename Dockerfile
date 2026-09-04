@@ -51,4 +51,5 @@ CMD ["/app/llama-server", \
      "-ngl", "999", "-fa", "on", \
      "-ctk", "q8_0", "-ctv", "q8_0", \
      "-c", "32768", "-ub", "2048", "-t", "4", \
+     "--cache-ram", "8192", "--ctx-checkpoints", "32", \
      "--jinja", "--host", "0.0.0.0", "--port", "8080"]

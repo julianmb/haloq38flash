@@ -161,8 +161,18 @@ add the mtp sidecar for speculative decoding:
 ```bash
 docker compose run qwen38-flash-next /app/llama-server \
   -md /models/mtp-Qwen3.8-Flash-Next-Q8_0.gguf \
-  --spec-type draft-mtp --spec-draft-n-max 6 --spec-draft-p-min 0.75
+  --spec-type draft-mtp --spec-draft-n-max 6 --spec-draft-p-min 0.75 \
+  --cache-ram 8192 --ctx-checkpoints 32
 ```
+
+### warm-turn cache (repeat context is nearly free)
+
+re-prompts over the same long context skip prefill from ram checkpoints —
+measured 438s → 0.68s at 128k (**640×**) and 994s → 0.74s at 256k
+(**1351×**), receipts `results/warm-full-*.json`. the flags above (now also
+the image default) enable it; warm cost is ~constant ~0.7s, so the ratio
+grows with depth. this is the single biggest effective speedup for agent
+workloads with repeated system prompts or revisited documents.
 
 ### 262k context (ssd streaming or cpu ple offload)
 

@@ -20,4 +20,5 @@ services:
     # docker compose run qwen38-flash-next \
     #   /app/llama-server -m /models/Qwen3.8-Flash-Next-IQ4_XS-PLE.gguf \
     #   -c 131072 -md /models/mtp-Qwen3.8-Flash-Next-Q8_0.gguf \
-    #   --spec-type draft-mtp --spec-draft-n-max 6 --spec-draft-p-min 0.75
+    #   --spec-type draft-mtp --spec-draft-n-max 6 --spec-draft-p-min 0.75 \
+    #   --cache-ram 8192 --ctx-checkpoints 32
