@@ -137,6 +137,47 @@ engine-specific); ngram stacking adds nothing.
 verdict: do not switch; the MTP decode + 128k memory regressions are real
 and belong in the upstream issue with these receipts.
 
+## tier1 gain session — sidecar quant / draft tuning / kv / threads (2026-09-04)
+
+all on daily driver `ad914eb`. receipts `results/tier1-*`.
+
+**acceptance (first measurement on ad914eb):** 25/29 = **86.2%** at 8k
+(Q8_0 sidecar, n_max 6, p_min 0.75) — reproduced identically twice.
+merged engine measured 92.4%; the daily driver has less draft headroom.
+
+**sidecar quant matrix (8k mtp, n_max 6):**
+
+| sidecar | size | tg | verdict |
+|---|---|---|---|
+| Q8_0 (current) | 3.9G | 33.8 | reference |
+| Q4_K | 2.6G | 26.1, 32.1 | **−14%, rejected** — acceptance drop beats bandwidth saving |
+| Q5_K | 2.9G | 34.2 | par (within spread) |
+
+the bandwidth model predicted big Q4_K gains; empirically false —
+acceptance sensitivity dominates. sidecar stays Q8_0.
+
+**draft tuning on Q5_K (8k mtp):** n7 25.1, n8 28.7 — deeper drafts lose,
+n=6 confirmed a third time; p_min 0.70 → 34.6, 0.80 → 32.2 (noise). the
+8k cell is tuned out: every variant lands 32–35.
+
+**q4_0 KV:** ppl **4.2912 ±0.025** — statistically identical to the
+q8_0-KV PLE baseline (4.2932), zero quality cost. but 128k **mtp** with
+q4_0 KV swap-killed on ad914eb (745 MB cliff <5 min) where q8_0 KV runs
+clean at 13.5 — the Vulkan q4_0-KV + MTP path allocates big at depth
+(mechanism uninvestigated). verdict: fine for quality-bound/non-MTP use,
+not usable with MTP at depth.
+
+**ubatch 4096 @ 128k plain:** 184.8 / 9.8 vs 186.9 / 9.8 — no gain.
+
+**thread sweep (8k plain):** t2 333.0/24.0 · t4 395.8/23.9 · t8
+462.8/23.8 · t16 503.3/23.5 — pp scales with threads (t16 +27%), tg flat.
+follow-ups: 8k mtp t16 470.1/32.7 (pp +19%, tg par); 128k plain t16
+**267.1/9.7 (+43% pp vs 186.9)**, tg par.
+**verdict: `-t 16` is the prefill knob the daily driver was missing** —
+use it for ingestion/warm-cache rebuilds; decode is indifferent. Nathan
+df1671a03's prefill (+96% → 367.1) still beats it (+43% → 267.1), so the
+engine switch stays blocked on his MTP regression, not on prefill.
+
 ## ppl suite — wiki.test.raw, ctx 2048, `llama-perplexity` (vulkan, f16 kv)
 
 | quant | PPL | file | receipt |
