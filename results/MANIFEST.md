@@ -320,6 +320,39 @@ their package download started for a head-to-head on this box
 — and the NPU shares the same UMA bandwidth, so no decode advantage for
 this model.
 
+update: CIRU package removed per size decision (127G) — head-to-head
+cancelled, analysis kept. CIRU download dir deleted 2026-09-06.
+
+## indexer audit — Vulkan declines the qwen4exp top-k (K=2048) at all depths (2026-09-06)
+
+qwen4exp's sparse attention selects per layer per ubatch via
+`build_qsa_top_k` → `ggml_top_k` over the full cache width. the Vulkan
+backend's `supports_op` gate computes `min_pipeline = log2(K)+1` against
+`num_topk_pipelines = 11` — with the model's `indexer.top_k = 2048`,
+min_pipeline = 12 ≥ 11 → **declined, always** (the code even comments "we
+could potentially support larger... not clear if this is needed" — for
+qwen4exp it is needed, 48 layers × every ubatch). the MoE K=256 top-k runs
+fine on Vulkan; only the indexer width is declined.
+
+evidence: full 8k prefill profile (`GGML_VK_PERF_LOGGER=1`,
+`results/profile-8k-prefill.log`, 14.6 s of Vulkan work, pp 409.8 ≈ the
+413.9 median so the profiled run is representative) contains **zero**
+indexer-width TOP_K executions — ~192 expected calls, only the six tiny
+MoE K=256 lines. 8k breakdown is matmul-dominated (MUL_MAT 33% +
+MUL_MAT_ID 22%, FA 5%, GDN 3.6%).
+
+this matches CIRU's independently-named fix ("GPU admission for long QSA
+top-k") — same mechanism, their runtime admits what ours declines. the fix
+is backend/kernel work (raise the top-k pipeline range — Nathan/upstream
+territory), not flags: consistent with every no-gain flag probe (-ub 4096,
+-b 8192, n_max, p-min).
+
+tooling note: the vk perf logger itself is unusable at prefill scale —
+`GGML_VK_PERF_LOGGER=1` triggers instant multi-GB host swap (22 GB in
+<60 s at 32k, swap-killed the 128k run too), a logger artifact not model
+behavior. receipts `profile-128k/32k-prefill.log(.mem.log)`. do not retry;
+the 8k profile is the keeper.
+
 ## sha256 pins
 
 | receipt | sha256 (first 16) |
