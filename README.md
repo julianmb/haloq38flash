@@ -226,6 +226,9 @@ n=1, single runs. pick your file by use case.
 - conversion peak: ple scratch (191g) + f16 output (354g) coexist — budget
   ~560g free
 - `pkill -x llama-cli`, never `-f` (matches your own wrapper shell)
+- prefill scales with threads: `-t 16` gains up to +43% pp at 128k vs
+  `-t 4` (decode indifferent) — receipts `results/tier1-8k-plain-t*.log`,
+  `results/tier1-128k-plain-t16.log`
 - gpu memory is shared with everything else on the apu — two engines cannot
   hold ~90g+ models simultaneously without an oom cascade
 

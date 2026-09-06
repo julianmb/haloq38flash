@@ -353,6 +353,29 @@ tooling note: the vk perf logger itself is unusable at prefill scale —
 behavior. receipts `profile-128k/32k-prefill.log(.mem.log)`. do not retry;
 the 8k profile is the keeper.
 
+## blessed depth sweep @ 28b92f576 — healthy at ≤64k ctx, startup hang at 128k (2026-09-06)
+
+ROCmFPX-official build-official (vulkan), same flags/fillers as the n3
+suite, -t 4. receipts `results/blessed-*`.
+
+| cell | blessed @ 28b92f576 | ad914eb ref |
+|---|---|---|
+| 8k plain | 400.8 / 24.2 | 413.9 / 24.0 — par |
+| 8k mtp | 392.8 / 26.3 | 395.3 / 33.8 — **tg −22%** |
+| 32k content @ c=65536 | 389.5 / 20.2 | ~397 / ~20 — par |
+| 128k ctx (-c 139264) | startup hang 2/2 | 186.9 / 9.8 plain, 180.4 / 13.5 mtp |
+
+the 128k failure is a startup hang, not a memory cliff: zero output (not
+even "loading model"), RSS 0.4–0.8 GB at kill, HANG detector fired at
+150 s in both modes. the same binary runs clean minutes earlier at
+-c 65536 and -c 16384. threshold sits between 64k and 139k ctx — likely
+a giant upfront allocation (FA split-k scratch? QSA inputs sized to full
+ctx?) stalling the Vulkan allocator or the split estimator.
+
+verdict: daily driver stays `ad914eb` by a wide margin — blessed trails
+at 8k MTP and cannot start at 128k ctx at all. the engine-switch question
+is closed until upstream fixes both.
+
 ## sha256 pins
 
 | receipt | sha256 (first 16) |
