@@ -376,6 +376,30 @@ verdict: daily driver stays `ad914eb` by a wide margin — blessed trails
 at 8k MTP and cannot start at 128k ctx at all. the engine-switch question
 is closed until upstream fixes both.
 
+## halo-box PR #26/#27 eval — no movement on Flash-Next (2026-09-07)
+
+per Laurent's request on halo-box/strix-llama.cpp#25: built the community
+fork @ c7af5c6 (vulkan) + pr26 (MTP rollback slots) + pr27 (chunking
+gate), server-based 8k MTP cells (filler-8k, n_predict 128, temp 0 — tg
+AND draft stats per run). receipts `results/halobox-*.log/.json`.
+
+| engine | pp | tg | draft (acc) |
+|---|---|---|---|
+| ad914eb server (control) | 392.3 | 31.5 | 29/25 (86.2%) |
+| halo-box base c7af5c6 | 427.1 | 25.65 | 36/21 (58.3%) |
+| + pr26 | 429.9 | 26.04 | 36/21 (identical) |
+| + pr26 + pr27 | 428.7 | 25.95 | 36/21 (identical) |
+
+neither PR moves Flash-Next/IQ4_XS/n-max-6 (all within ±1.5% noise,
+draft sequences byte-identical across the three halo-box runs). but
+halo-box base trails ad914eb-server by −19% tg with much lower acceptance
+(58% vs 86%, 36 vs 29 draft rounds for the same prompt) — a separate
+Flash-Next-specific gap their two PRs don't address. pp is higher on
+halo-box (scan opts working): prefill-up/decode-down split, same
+signature as the ea35c5066 regression. hypothesis: newer kernels shifted
+draft-path numerics enough to flip greedy draft tokens → lower acceptance
+→ more rounds → lower tg. needs logit-level proof; flagged to the thread.
+
 ## sha256 pins
 
 | receipt | sha256 (first 16) |

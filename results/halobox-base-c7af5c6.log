@@ -1,0 +1,32 @@
+0.00.030.103 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.030.370 W srv  llama_server: -----------------
+0.00.030.371 W srv  llama_server: CORS is set to allow all origins ('*') and no API key is set
+0.00.030.371 W srv  llama_server: this can be a security risk (cross-origin attacks)
+0.00.030.371 W srv  llama_server: more info: https://github.com/ggml-org/llama.cpp/pull/25655
+0.00.030.371 W srv  llama_server: -----------------
+0.00.031.556 I srv    load_model: loading model '/mnt/ssd2/models/qwen38-flash-next/Qwen3.8-Flash-Next-IQ4_XS-PLE.gguf'
+0.27.906.695 I cmn          init: llama threadpool init, n_threads = 4
+0.27.986.382 I common_speculative_init_result: loading draft model '/mnt/ssd2/models/qwen38-flash-next/mtp-Qwen3.8-Flash-Next-Q8_0.gguf'
+0.28.269.058 W model has unused tensor blk.48.indexer.q_proj.weight (size = 2621440 bytes) -- ignoring
+0.28.269.063 W model has unused tensor blk.48.indexer.k_proj.weight (size = 655360 bytes) -- ignoring
+0.28.269.064 W model has unused tensor blk.48.indexer.q_norm.weight (size = 512 bytes) -- ignoring
+0.28.269.066 W model has unused tensor blk.48.indexer.k_norm.weight (size = 512 bytes) -- ignoring
+0.30.003.950 I srv    load_model: initializing, n_slots = 4, n_ctx_slot = 16384, kv_unified = 'true'
+0.30.076.079 I srv          init: chat template supports preserving reasoning, consider enabling it via --reasoning-preserve
+0.30.076.131 I srv  llama_server: model loaded
+0.30.076.134 I srv  llama_server: listening on http://127.0.0.1:18092
+0.33.121.556 I slot get_availabl: id  3 | task -1 | selected slot by LRU, t_last = -1
+0.33.121.620 I slot launch_slot_: id  3 | task 0 | processing task, is_child = 0
+0.37.879.756 I slot print_timing: id  3 | task 0 | prompt processing, n_tokens =   2048, progress = 0.25, t =   4.42 s / 463.72 tokens per second
+0.42.513.022 I slot print_timing: id  3 | task 0 | prompt processing, n_tokens =   4096, progress = 0.50, t =   6.22 s / 658.95 tokens per second
+0.47.217.206 I slot print_timing: id  3 | task 0 | prompt processing, n_tokens =   6144, progress = 0.75, t =  13.47 s / 456.25 tokens per second
+0.47.317.611 I slot print_timing: id  3 | task 0 | prompt processing, n_tokens =   6145, progress = 0.75, t =  14.16 s / 433.97 tokens per second
+0.52.135.433 I slot print_timing: id  3 | task 0 | prompt processing, n_tokens =   8189, progress = 1.00, t =  18.69 s / 438.14 tokens per second
+0.53.862.018 I slot print_timing: id  3 | task 0 | prompt eval time =   19180.85 ms /  8193 tokens (    2.34 ms per token,   427.14 tokens per second)
+0.53.862.024 I slot print_timing: id  3 | task 0 |        eval time =    1559.37 ms /    41 tokens (   38.98 ms per token,    25.65 tokens per second)
+0.53.862.026 I slot print_timing: id  3 | task 0 |       total time =   20740.22 ms /  8234 tokens
+0.53.862.039 I slot print_timing: id  3 | task 0 |    graphs reused =          5
+0.53.862.045 I slot print_timing: id  3 | task 0 | draft acceptance = 0.58333 (   21 accepted /    36 generated), mean len =  2.91
+0.53.862.222 I slot      release: id  3 | task 0 | stop processing: n_tokens = 8234, truncated = 0
+0.53.892.916 I srv    operator(): operator(): cleaning up before exit...
+0.53.997.293 W ~llama_context:    Vulkan0 compute buffer size of 2540.7473 MiB, does not match expectation of 2773.8126 MiB
