@@ -1,0 +1,74 @@
+
+
+Loading model... 
+
+▄▄ ▄▄
+██ ██
+██ ██  ▀▀█▄ ███▄███▄  ▀▀█▄    ▄████ ████▄ ████▄
+██ ██ ▄█▀██ ██ ██ ██ ▄█▀██    ██    ██ ██ ██ ██
+██ ██ ▀█▄██ ██ ██ ██ ▀█▄██ ██ ▀████ ████▀ ████▀
+                                    ██    ██
+                                    ▀▀    ▀▀
+
+build      : b11541-28b92f576
+model      : /mnt/ssd2/models/qwen38-flash-next/Qwen3.8-Flash-Next-IQ4_XS-PLE.gguf
+ftype      : IQ4_XS - 4.25 bpw
+modalities : text
+
+available commands:
+  /exit or Ctrl+C     stop or exit
+  /regen              regenerate the last response
+  /clear              clear the chat history
+  /read <file>        add a text file
+  /glob <pattern>     add text files using globbing pattern
+
+
+
+> Write a Python function that computes the nth Fibonacci number using memoization, with a docstring, type hints, and a short example. Then explain how the memoization cache works.
+```python
+from functools import lru_cache
+from typing import Dict
+
+
+def fibonacci(n: int, memo: Dict[int, int] = None) -> int:
+    """
+    Compute the nth Fibonacci number using memoization.
+
+    The Fibonacci sequence is defined as:
+        F(0) = 0
+        F(1) = 1
+        F(n) = F(n-1) + F(n-2) for n >= 2
+
+    Args:
+        n: A non-negative integer representing the position in the Fibonacci sequence.
+        memo: A dictionary used to cache previously computed Fibonacci numbers.
+              Defaults to None, which initializes an empty dictionary.
+
+    Returns:
+        The nth Fibonacci number.
+
+    Raises:
+        ValueError: If n is negative.
+
+    Example:
+        >>> fibonacci(10)
+        55
+        >>> fibonacci(0)
+        0
+        >>> fibonacci(1)
+        1
+    """
+    if n < 0:
+        raise ValueError("n must be a non-negative integer")
+
+    if memo is None:
+        memo = {}
+
+    if n in memo:
+        return memo[n]
+
+
+[ Prompt: 47.0 t/s | Generation: 25.7 t/s ]
+
+
+Exiting...

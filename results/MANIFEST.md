@@ -256,6 +256,49 @@ all STATIC/PLE/M2 sweep numbers → `results/2026-08-31-overnight-quant-bench.md
   numbers stay on `ad914eb`. full analysis:
   `results/vulkan-qwen4exp-miscompute.md`.
 
+## ROCmFPX upstream integration @ 28b92f576 — Vulkan miscompute FIXED, strict-MTP on GPU (2026-09-06)
+
+official/main landed qwen4exp split-PLE + native MTP upstream (PR #21,
+`6390402e6`, adaptation `e811481023` credited, JJJYmmm MTP lineage) plus
+PR #20 (RDNA3 HIP MMQ) and PR #18 (vulkan-fa-splitk). our uncommitted
+local port was stashed as superseded. two builds of the same tree:
+build-official (vulkan) and build-hip (gfx1151 HIP, ROCm 7.2.3), both
+build 11541. receipts `results/28b9-*`.
+
+**qwen4exp coherence (oracle prompt, temp 0, n 256):**
+
+| test | backend | verdict |
+|---|---|---|
+| plain | Vulkan | **COHERENT** — the 22496778e-era Vulkan garbage is gone |
+| plain | HIP | COHERENT |
+| strict MTP | Vulkan | COHERENT, 35.8 t/s, 182/239 accepted (76.2%) |
+| strict MTP | HIP | COHERENT, 31.9 t/s, 166/226 accepted (73.5%) |
+
+strict outputs diverge across backends at char 386 (both valid English) —
+strict guarantees within-backend exactness vs non-spec greedy, not
+cross-backend identity. note: `--spec-mtp-strict-qwen` is server-gated in
+this build (`.set_examples({LLAMA_EXAMPLE_SERVER})`) — llama-cli rejects
+it; strict tests must run via llama-server (-np 1).
+
+**decode cells (HIP build, ROCBLAS_USE_HIPBLASLT=1, -t 4):**
+
+| cell | HIP @ 28b92f576 | Vulkan t4 ref |
+|---|---|---|
+| 8k plain | 482.6 / 21.0 | 413.9 / 24.0 (pp +17%, tg −12.5%) |
+| 8k mtp | 433.3 / 21.7 | 395.3 / 33.8 (pp +10%, tg −36%) |
+| 128k mtp | hangs at load 3/3 | 180.4 / 13.5 |
+
+128k mtp on HIP: deterministic load stall — process frozen ~3.8 GB RSS,
+zero output (not even device enumeration), guard-killed at 150 s in all
+three attempts. 8k cells run clean on the same binary; classified as a
+HIP load-path bug at depth, not investigated further.
+
+verdict: daily driver stays Vulkan (tg + decode wins everywhere). HIP
+prefill is faster (hipBLASLt) but decode/MTP much weaker and deep-MTP
+unusable on this build. the real win: the blessed engine is fully healthy
+— the port-PR decision is moot (upstream did it, credited), and strict-MTP
+is now a working GPU feature instead of a CPU-only exactness proof.
+
 ## sha256 pins
 
 | receipt | sha256 (first 16) |

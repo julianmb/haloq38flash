@@ -1,5 +1,10 @@
 # blessed-Vulkan qwen4exp miscompute (2026-09-03)
 
+> **RESOLVED 2026-09-06:** fixed upstream by the ROCmFPX qwen4exp
+> integration (PR #21, base c3b1c9999). Vulkan @ `28b92f576` produces
+> coherent output — see MANIFEST "ROCmFPX upstream integration". kept for
+> the diagnostic method (4-way comparison) and the pre-fix record.
+
 status: **confirmed, isolated to the Vulkan backend**. the port and the
 model code are exonerated.
 
