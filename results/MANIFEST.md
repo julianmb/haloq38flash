@@ -299,6 +299,27 @@ unusable on this build. the real win: the blessed engine is fully healthy
 — the port-PR decision is moot (upstream did it, credited), and strict-MTP
 is now a working GPU feature instead of a CPU-only exactness proof.
 
+## CIRU comparison probes (2026-09-06)
+
+CIRU v2.0 (`jcbtc/Qwen3.8-Flash-CIRU-STRIX-IU4`) is a custom ROCm 10
+runtime + mixed-precision package (FP8-exact NVMe-paged PLE, QSA top-k
+GPU admission, F16 target KV, p-min 0), not stock llama.cpp. their
+receipts beat ours at 128k prefill (232.95 vs 186.9) and on fidelity
+(mean KL 0.03045 vs BF16); we beat them on 8k prefill (413.9 median /
+504 @ -t16 vs 370.4), 8k tg (24.0 vs 19.2) and 128k tg (9.8 vs 6.75).
+two adoption probes on our driver, both negative:
+
+| probe | result | verdict |
+|---|---|---|
+| f16 KV @ 128k plain | 179.1 / 9.8 vs q8_0 186.9 / 9.8 | no gain — their deep-prefill edge is indexer kernels, not KV type |
+| p-min 0 @ 8k mtp | 364.6 / 24.0 vs p0.75 395.3 / 33.8 | −29% tg — full-accept drafting wastes verify batches on our 86% acceptance |
+
+their package download started for a head-to-head on this box
+(`/mnt/ssd2/models/ciru-iu4`). NPU assessed and parked: XDNA2 stack
+(accel0 + lemonade present) serves a fixed arch list — no qwen4exp path
+— and the NPU shares the same UMA bandwidth, so no decode advantage for
+this model.
+
 ## sha256 pins
 
 | receipt | sha256 (first 16) |
