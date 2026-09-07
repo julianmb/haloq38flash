@@ -400,6 +400,33 @@ signature as the ea35c5066 regression. hypothesis: newer kernels shifted
 draft-path numerics enough to flip greedy draft tokens → lower acceptance
 → more rounds → lower tg. needs logit-level proof; flagged to the thread.
 
+## port phase A (#2 head-sum loop) — 8k MTP regresses, 128k inconclusive (2026-09-07)
+
+worktree `repos/llama-qwen4exp-port` @ ad914eb + upstream's head-sum loop
+verbatim (replaces cont+permute+sum_rows). build-port, same flags, -t 4.
+receipts `results/port-a-*`.
+
+| cell | port-A | ad914eb ref |
+|---|---|---|
+| 8k plain | 415.3 / 23.9 | 413.9 / 24.0 — par |
+| 8k mtp | 380.4 / **27.6** | 395.3 / 33.8 — **tg −18%**, clean run, zero swap |
+| 128k plain | swap-killed | 186.9 / 9.8 — **inconclusive, box state** |
+
+the 8k MTP drop is real (outside the 33.5–34.3 same-config band) and not
+swap-related. two candidate mechanisms: (a) the slice-add path is slower
+on this scheduler (non-contiguous inputs), (b) summation-order rounding
+flips near-tie top-k selections → lower acceptance (consistent with the
+determinism saga — ULP noise cascades here). needs an acceptance probe
+to distinguish; queued.
+
+128k inconclusive for BOTH builds (port AND ad914eb control swap-died):
+the box is memory-degraded — agent harness processes hold ~100 GB+ VM
+each (`ps` shows three `opencode` procs at ~80–100 GB VSZ), page cache
+collapsed to 2 GB, 3.7 GB residual swap. fresh 91 GB loads cannot get
+contiguous memory. no 128k conclusion is possible until memory recovers
+(session restart or reboot clears the harness squat). phase B (#3+#1+#4)
+and the acceptance probe are queued behind recovery.
+
 ## sha256 pins
 
 | receipt | sha256 (first 16) |
