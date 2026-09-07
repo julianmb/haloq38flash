@@ -458,6 +458,28 @@ verified gone (zero remnants in diff). 128k effect untested (box memory
 still sick for 91 GB + large-KV loads). the +2.9% Phase B prefill gain
 is single-run noise-adjacent; treat as unconfirmed.
 
+## 256k MTP wall on daily driver — engine-level, flags exhausted (2026-09-07)
+
+four attempts, all swap-killed during load/early phase. guard for this
+probe: kill on 4 consecutive VmSwap samples >2 GB, oom_score_adj 500 on
+the engine. all terminations were guard-initiated (rc=137); the box stayed
+responsive throughout and recovered fully each time (119G available after).
+
+| attempt | config | outcome |
+|---|---|---|
+| r1 | -ub 512, no cache-ram | 22 GB swap in 4 min (avail 117G -> 18G), killed |
+| r2 | retry, empty page cache | 6.7 -> 8.3 GB swap in ~2 min, killed |
+| plecpu | + per_layer_token_embd=CPU | 7.7 GB swap, killed |
+| (earlier) | default flags | 151 MB guard trip |
+
+the failure is the 257024-ctx upfront allocation (KV + graphs), not
+gradual pressure: 139264 runs clean on the same binary (plain and mtp),
+and the merged engine completes full 256k MTP (187.2/8.0, 0 swap) on the
+same box. tried: ubatch 512, no cache-ram (frees 8G), PLE table to CPU.
+not tried: shared sidecar (loader-blocked), q4_0 KV (proven swap-death
+at 128k). verdict: 256k MTP stays merged-engine-only until upstream
+changes the allocation strategy. daily driver ceiling remains 128k.
+
 ## sha256 pins
 
 | receipt | sha256 (first 16) |
