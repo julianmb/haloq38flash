@@ -1,0 +1,28 @@
+0.00.033.698 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.034.263 W srv  llama_server: -----------------
+0.00.034.265 W srv  llama_server: CORS is set to allow all origins ('*') and no API key is set
+0.00.034.265 W srv  llama_server: this can be a security risk (cross-origin attacks)
+0.00.034.266 W srv  llama_server: more info: https://github.com/ggml-org/llama.cpp/pull/25655
+0.00.034.266 W srv  llama_server: -----------------
+0.00.035.501 I srv    load_model: loading model '/mnt/ssd2/models/qwen38-flash-next/Qwen3.8-Flash-Next-IQ4_XS-PLE.gguf'
+0.39.090.907 I cmn          init: llama threadpool init, n_threads = 4
+0.39.172.140 I common_speculative_init_result: loading draft model '/mnt/ssd2/models/qwen38-flash-next/mtp-Qwen3.8-Flash-Next-Q8_0.gguf'
+0.41.166.510 I srv    load_model: initializing, n_slots = 4, n_ctx_slot = 16384, kv_unified = 'true'
+0.41.227.438 I srv          init: chat template supports preserving reasoning, consider enabling it via --reasoning-preserve
+0.41.227.488 I srv  llama_server: model loaded
+0.41.227.493 I srv  llama_server: listening on http://127.0.0.1:18097
+0.42.138.003 I slot get_availabl: id  3 | task -1 | selected slot by LRU, t_last = -1
+0.42.138.081 I slot launch_slot_: id  3 | task 0 | processing task, is_child = 0
+ggml_vulkan: MUL_MAT_ID f16-B path engaged (GGML_VK_MMID_F16B)
+0.46.557.084 I slot print_timing: id  3 | task 0 | prompt processing, n_tokens =   2048, progress = 0.25, t =   4.06 s / 504.29 tokens per second
+0.51.428.027 I slot print_timing: id  3 | task 0 | prompt processing, n_tokens =   4096, progress = 0.50, t =   9.02 s / 454.34 tokens per second
+0.56.907.864 I slot print_timing: id  3 | task 0 | prompt processing, n_tokens =   6144, progress = 0.75, t =  14.49 s / 423.96 tokens per second
+0.57.018.427 I slot print_timing: id  3 | task 0 | prompt processing, n_tokens =   6145, progress = 0.75, t =  14.88 s / 413.09 tokens per second
+1.03.079.318 I slot print_timing: id  3 | task 0 | prompt processing, n_tokens =   8189, progress = 1.00, t =  20.65 s / 396.55 tokens per second
+1.04.516.154 I slot print_timing: id  3 | task 0 | prompt eval time =   21090.83 ms /  8193 tokens (    2.57 ms per token,   388.46 tokens per second)
+1.04.516.160 I slot print_timing: id  3 | task 0 |        eval time =    1287.05 ms /    41 tokens (   32.18 ms per token,    31.08 tokens per second)
+1.04.516.161 I slot print_timing: id  3 | task 0 |       total time =   22377.88 ms /  8234 tokens
+1.04.516.170 I slot print_timing: id  3 | task 0 |    graphs reused =          5
+1.04.516.178 I slot print_timing: id  3 | task 0 | draft acceptance = 0.86207 (   25 accepted /    29 generated), mean len =  3.50
+1.04.516.363 I slot      release: id  3 | task 0 | stop processing: n_tokens = 8234, truncated = 0
+1.04.543.287 I srv    operator(): operator(): cleaning up before exit...

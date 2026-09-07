@@ -427,6 +427,37 @@ contiguous memory. no 128k conclusion is possible until memory recovers
 (session restart or reboot clears the harness squat). phase B (#3+#1+#4)
 and the acceptance probe are queued behind recovery.
 
+## port phase B — shared inputs break multi-chunk prefill, reverted (2026-09-07)
+
+worktree `repos/llama-qwen4exp-port` @ ad914eb65 (+ uncommitted Phase A).
+upstream items #1 (shared QSA inputs), #3 (last-layer filter), #4 (gridDim
+reshape) ported verbatim. build-port. receipts `results/port-b-*`,
+`results/port-no3-*`, `results/port-no1-*`.
+
+| cell | phase B (all three) | phase A / ref |
+|---|---|---|
+| 8k plain | 425.7 / 24.5 | 415.3 / 23.9, ref 413.9 / 24.0 (+2.9% pp) |
+| 8k mtp | 33.5, 34.1 | ref 33.8, in band (27.6 was outlier) |
+| acceptance | 11/11, 16 tokens | 25/29, 41 tokens - DIVERGENT but deterministic (byte-identical rerun) |
+| oracle (48 tok) | coherent fibonacci | coherent - single-build path fine |
+
+root cause, by elimination + revert tests: #4 is math-identical
+(reshape-only grid change); #3 reverted with zero change (still 11/11),
+EXONERATED; #1 reverted -> baseline restored BYTE-EXACT (25/29, same
+144-char text). #1 guilty: the shared-input map lives on the graph
+builder, which persists across prefill chunk rebuilds (8193 tokens /
+2048 = 5 builds, growing n_kv); later chunks reuse the first chunk's
+cell layout. single-build runs (oracle) are unaffected, which is why a
+naive smoke test passes. upstream has no map clearing (only
+find/end/emplace) - same latent bug there for multi-chunk prefill with
+growing cache.
+
+final worktree state: Phase A (#2, validated byte-identical) + #4
+(math-identical, genuine 262k overflow fix). #1 and #3 reverted and
+verified gone (zero remnants in diff). 128k effect untested (box memory
+still sick for 91 GB + large-KV loads). the +2.9% Phase B prefill gain
+is single-run noise-adjacent; treat as unconfirmed.
+
 ## sha256 pins
 
 | receipt | sha256 (first 16) |
