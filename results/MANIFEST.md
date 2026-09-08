@@ -507,6 +507,23 @@ verdict: myhacsint dominates at depth; loses 8k MTP tg (29.2 vs 33.8).
 pending: blk48-vs-shared isolation at 128k on this engine (user's server
 occupied the GPU at eval time).
 
+## myhacsint consolidation — Gate 1: flags + loader analysis (2026-09-08)
+
+program: single-engine migration to myhacsint b10685. gate results:
+
+| check | result |
+|---|---|
+| --spec-mtp-strict-qwen | MISSING — bit-exact story stays ROCmFPX-only |
+| --cache-ram / --ctx-checkpoints | present — warm-cache story transfers (ratios to re-measure) |
+| --model-draft, adaptive | present |
+| shared sidecar (2.79G) | loads + runs (measured: 508/29.2 @8k, 332/22.1 @128k, 270/15.4 @200k) |
+| blk.48 sidecar (3.9G, published) | static verdict: WILL LOAD — mtp_only probe (`blk.0.* == nullptr`) structurally identical to ad914eb where it provably works, plus model_shared superset tolerance (speculative.cpp:2548 borrows missing tensors from target). runtime confirmation queued behind GPU availability. |
+
+code refs (myhacsint-b10685 worktree): src/models/qwen4exp.cpp:29-30
+(nextn metadata), :158-159 (mtp_only probe), :271-273 (nextn tensors);
+common/speculative.cpp:2548 (model_shared wiring);
+common/common.cpp:1317 (shared path for has_draft && spec_mtp).
+
 ## sha256 pins
 
 | receipt | sha256 (first 16) |
