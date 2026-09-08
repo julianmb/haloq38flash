@@ -480,6 +480,33 @@ not tried: shared sidecar (loader-blocked), q4_0 KV (proven swap-death
 at 128k). verdict: 256k MTP stays merged-engine-only until upstream
 changes the allocation strategy. daily driver ceiling remains 128k.
 
+## myhacsint b10685 eval — shared sidecar works, depth dominance (2026-09-08)
+
+motivated by the alchi-flac post (21.5 t/s @200k on this branch family).
+worktree `repos/myhacsint-b10685` @ 2dff8596d, vulkan build (their flags:
+static, native, server+tests, openssl). shared sidecar re-downloaded from
+unsloth (2.79G; deleted in cleanup). receipts `results/mh-*`.
+
+| cell | myhacsint b10685 | ad914eb ref |
+|---|---|---|
+| shared sidecar load | OK, 0 errors | loader-blocked (token_embd not found) |
+| 8k plain | 556.6 / 26.6 | 413.9 / 24.0 (pp +34%!) |
+| 8k mtp-shared (n6) | 508.7 / 29.2 | blk48 395.3 / 33.8 (pp faster, tg slower) |
+| 8k acceptance shared | 12/19 = 63% | blk48 25/29 = 86% |
+| 128k mtp-shared (n6) | 332.8 / 22.1 | blk48 180.4 / 13.5 (pp +84%, tg +64%!) |
+| 200k recipe (F16 KV, ub1024, lazy/mmap, adaptive 0-5) | 270.3 / 15.4, max swap 332MB | no equivalent (their post: 199/21.5 on Q5_K_M) |
+
+findings: prefill delta is engine (target-only phase), not sidecar —
++34% @8k growing to +84% @128k. shared sidecar accepts worse than blk48
+at 8k (63% vs 86%) but enables runs blk48/ad914eb cannot attempt (2.79G
++ lazy/mmap/fit stack). their 80%-at-200K claim not directly verified
+(needs server probe at depth). F16 KV survived 200k with 332MB swap
+(vs q4_0-KV swap death on ad914eb — different mechanism, their FA path
+handles it). adaptive 0-5 ran clean.
+verdict: myhacsint dominates at depth; loses 8k MTP tg (29.2 vs 33.8).
+pending: blk48-vs-shared isolation at 128k on this engine (user's server
+occupied the GPU at eval time).
+
 ## sha256 pins
 
 | receipt | sha256 (first 16) |
