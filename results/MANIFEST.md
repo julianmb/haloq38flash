@@ -518,11 +518,32 @@ program: single-engine migration to myhacsint b10685. gate results:
 | --model-draft, adaptive | present |
 | shared sidecar (2.79G) | loads + runs (measured: 508/29.2 @8k, 332/22.1 @128k, 270/15.4 @200k) |
 | blk.48 sidecar (3.9G, published) | static verdict: WILL LOAD — mtp_only probe (`blk.0.* == nullptr`) structurally identical to ad914eb where it provably works, plus model_shared superset tolerance (speculative.cpp:2548 borrows missing tensors from target). runtime confirmation queued behind GPU availability. |
+| blk.48 runtime test (2026-09-08) | **FAILS — WILL-LOAD verdict was wrong.** `check_tensor_dims: tensor 'blk.48.nextn.hc_head_norm.weight' not found`. myhacsint's draft head is a different architecture (separate `nextn.hc_head_*` stack, qwen4exp.cpp:277) vs our file's `eh_proj/enorm/hnorm` design — no renaming fix possible. **consolidation to myhacsint REQUIRES the shared sidecar (Unsloth's 2.79G third-party file); our published blk.48 cannot work there.** sidecar strategy is now a user decision (adopt shared / dual-sidecar docs / stay two-engine). |
 
 code refs (myhacsint-b10685 worktree): src/models/qwen4exp.cpp:29-30
 (nextn metadata), :158-159 (mtp_only probe), :271-273 (nextn tensors);
 common/speculative.cpp:2548 (model_shared wiring);
 common/common.cpp:1317 (shared path for has_draft && spec_mtp).
+
+## myhacsint consolidation — Gate 2a: QUALITY-FAIL (2026-09-08)
+
+ppl (wiki.test.raw, ctx 2048, q8_0 KV — same protocol as the suite):
+
+| engine | file | PPL |
+|---|---|---|
+| ad914eb | PLE 91G | 4.2932 ±0.025 |
+| myhacsint b10685 | PLE 91G (same file) | **4.5213 ±0.027** |
+
+gap +0.228 (~6σ), essentially the static quant's level (4.5221). same
+weights, different engine — the quality loss sits in myhacsint's compute
+path (prime suspect: PLE table gather precision; ad914eb gathers to F32
+explicitly for bit-identical downstream matmuls). receipt
+`results/mh-ppl-ple.log`. gate threshold was ≤4.35: FAIL. medians skipped
+per fail-fast ordering (speed records on a quality-failed engine don't
+serve consolidation).
+
+consolidation status: BLOCKED on quality. myhacsint is faster at depth
+but computes worse — a speed/quality tradeoff, not a migration.
 
 ## sha256 pins
 
