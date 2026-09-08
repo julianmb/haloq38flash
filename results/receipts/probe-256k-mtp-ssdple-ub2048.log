@@ -1,0 +1,88 @@
+ggml_vulkan: MUL_MAT_ID f16-B path engaged (GGML_VK_MMID_F16B)
+radv/amdgpu: The CS has been cancelled because the context is lost. This context is innocent.
+21.21.758.166 E ggml_vulkan: device lost on Vulkan0
+21.21.759.680 E srv  update_slots: decode() failed: vk::Queue::submit: ErrorDeviceLost
+21.21.759.691 E srv    send_error: task id = 0, error: decode() failed: vk::Queue::submit: ErrorDeviceLost
+21.21.759.969 E ggml_vulkan: device lost on Vulkan0
+[New LWP 207257]
+[New LWP 207256]
+[New LWP 207255]
+[New LWP 207254]
+[New LWP 207253]
+[New LWP 207252]
+[New LWP 207251]
+[New LWP 207250]
+[New LWP 207249]
+[New LWP 207248]
+[New LWP 207247]
+[New LWP 207246]
+[New LWP 207245]
+[New LWP 207244]
+[New LWP 207243]
+[New LWP 207242]
+[New LWP 207136]
+[New LWP 207135]
+[New LWP 207134]
+[New LWP 207133]
+[New LWP 207132]
+[New LWP 207131]
+[New LWP 207130]
+[New LWP 207129]
+[New LWP 207128]
+[New LWP 207127]
+[New LWP 207126]
+[New LWP 207125]
+[New LWP 207124]
+[New LWP 207123]
+[New LWP 207122]
+[New LWP 207121]
+[New LWP 207120]
+[New LWP 207119]
+[New LWP 207118]
+[New LWP 207117]
+[New LWP 207116]
+[New LWP 207115]
+[New LWP 207114]
+[New LWP 207113]
+[New LWP 207112]
+[New LWP 207111]
+[New LWP 207110]
+[New LWP 207109]
+[New LWP 207108]
+[New LWP 207107]
+[New LWP 207106]
+[New LWP 207105]
+[New LWP 207104]
+[New LWP 207103]
+[New LWP 207102]
+[New LWP 207101]
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <https://debuginfod.ubuntu.com>
+Enable debuginfod for this session? (y or [n]) [answered N; input not from terminal]
+Debuginfod has been disabled.
+To make this setting permanent, add 'set debuginfod enabled off' to .gdbinit.
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+0x00007265c2298e51 in __futex_abstimed_wait_common64 (private=128, cancel=true, abstime=0x0, op=265, expected=207104, futex_word=0x7265a39ff990) at ./nptl/futex-internal.c:57
+warning: 57	./nptl/futex-internal.c: No such file or directory
+#0  0x00007265c2298e51 in __futex_abstimed_wait_common64 (private=128, cancel=true, abstime=0x0, op=265, expected=207104, futex_word=0x7265a39ff990) at ./nptl/futex-internal.c:57
+57	in ./nptl/futex-internal.c
+#1  __futex_abstimed_wait_common (cancel=true, private=128, abstime=0x0, clockid=0, expected=207104, futex_word=0x7265a39ff990) at ./nptl/futex-internal.c:87
+87	in ./nptl/futex-internal.c
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x7265a39ff990, expected=207104, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=128) at ./nptl/futex-internal.c:139
+139	in ./nptl/futex-internal.c
+#3  0x00007265c229e883 in __pthread_clockjoin_ex (threadid=125780862432960, thread_return=0x0, clockid=0, abstime=0x0, block=<optimised out>) at ./nptl/pthread_join_common.c:102
+warning: 102	./nptl/pthread_join_common.c: No such file or directory
+#4  0x00007265c26ece33 in std::thread::join() () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#5  0x00007265c3178975 in cli_context::shutdown() () from /home/user/source/llama.cpp-strix-halo-vulkan/build/bin/libllama-cli-impl.so
+#6  0x00007265c317a482 in cli_context::~cli_context() () from /home/user/source/llama.cpp-strix-halo-vulkan/build/bin/libllama-cli-impl.so
+#7  0x00007265c316a257 in llama_cli(int, char**) () from /home/user/source/llama.cpp-strix-halo-vulkan/build/bin/libllama-cli-impl.so
+#8  0x00007265c222a1ca in __libc_start_call_main (main=main@entry=0x594b71084040 <main>, argc=argc@entry=45, argv=argv@entry=0x7ffc6acc8568) at ../sysdeps/nptl/libc_start_call_main.h:58
+warning: 58	../sysdeps/nptl/libc_start_call_main.h: No such file or directory
+#9  0x00007265c222a28b in __libc_start_main_impl (main=0x594b71084040 <main>, argc=45, argv=0x7ffc6acc8568, init=<optimised out>, fini=<optimised out>, rtld_fini=<optimised out>, stack_end=0x7ffc6acc8558) at ../csu/libc-start.c:360
+warning: 360	../csu/libc-start.c: No such file or directory
+#10 0x0000594b71084075 in _start ()
+[Inferior 1 (process 207097) detached]
+terminate called after throwing an instance of 'vk::DeviceLostError'
+  what():  vk::Queue::submit: ErrorDeviceLost

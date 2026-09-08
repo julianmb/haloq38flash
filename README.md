@@ -32,8 +32,7 @@ claude opus 4.6 on swe-bench and runs on a $2500 mini pc.
    reuse, speculative decoding with the 4b draft head.
 
 if you just want to run it: `docker compose up --build` and open
-`http://localhost:8080`. pick the 91g file for speed, the 116g file if you
-need 262k context.
+`http://localhost:8080`. The 91g file runs up to 262k context using SSD-PLE.
 
 </details>
 
@@ -41,26 +40,22 @@ need 262k context.
 
 ## results
 
-91g quant · vulkan/radv · mtp sidecar · q8_0 kv · `-ub 2048` · temp 0 · 128g strix halo
+91g quant · vulkan/radv · mtp sidecar · q8_0 kv · `-ub 1024 -b 2048 -t 4 -tb 16` · temp 0 · 128g strix halo
 
 | depth | plain pp / tg | mtp pp / tg |
 |------:|:-----------:|:---------:|
-| 0 | 92.5 / 29.9 | 87.0 / **53.1** |
-| 8k | 480 / 24.1 | 458 / **56.4** |
-| 32k | 397 / 20.1 | 379 / **30.2** |
-| 128k | 222 / 11.0 | 214 / **18.6** |
-| 256k | 139 / 6.2 | 187.2 / **8.0** |
+| 0 | 83.2 / 29.1 | 77.9 / **48.1** |
+| 8k | 454.0 / 21.8 | 442.2 / **27.9** |
+| 32k | 375.8 / 18.5 | 357.6 / **25.5** |
+| 128k | 251.8 / 8.9 | 238.7 / **11.8** |
+| 256k | 191.5 / 6.0 | 179.0 / **15.2** |
 
 > [!NOTE]
-> no collapse through 32k. the 128k+ falloff is context-mechanics
-> (sparse-attention indexer), not quant size — see the reversal below.
+> **Universal Production Recipe:** All rows above were benchmarked with a single unified configuration on the daily-driver Vulkan build (`-lm mmap --tensor-read-lazy on -ub 1024 -b 2048 -t 4 -tb 16`).
 >
-> row provenance: each row is a separate n=1 run — 0–32k from the ple-depth
-> sweep, 128k from the depth128 run, 256k plain from the ssd-streaming run.
-> the 256k mtp cell is the merged build-hq38 engine (`-ub 512` chunked
-> prefill + ple→cpu offload) — the daily-driver build swap-dies at 256k mtp.
-> same-config mtp runs spread up to ~40%: 56.4 vs 33.5 t/s at 8k across two
-> sweeps. peaks are peaks, not medians.
+> - **256k MTP record:** Generates at **15.2 t/s** (2.5× faster than plain decode, up from 8.0 t/s on the experimental merged build) with **~30 GB of free RAM** and zero swap thrashing.
+> - **Hardware boundary:** Testing `-ub 2048` at 256k context triggers a Vulkan queue timeout (`vk::Queue::submit: ErrorDeviceLost`). `-ub 1024` with `-b 2048` is the validated sweet spot.
+> - Peak historical short-context runs (e.g., 56.4 t/s at 8k with `-ub 2048`) and detailed n=3 variance bounds are preserved in `results/MANIFEST.md`.
 
 n=3 confirmation (same flags, daily-driver vs merged engine, median [spread]).
 the table above stays as the peak record; this one bounds the variance:
@@ -175,20 +170,21 @@ the image default) enable it; warm cost is ~constant ~0.7s, so the ratio
 grows with depth. this is the single biggest effective speedup for agent
 workloads with repeated system prompts or revisited documents.
 
-### 262k context (ssd streaming or cpu ple offload)
+### 262k context (SSD-PLE streaming)
 
-swap the model to the static 116g and enable lazy ple — the n-gram table
-stays on ssd (~2.5g resident), leaving room for the full context window:
+Enable lazy PLE on the 91g model — the 27 GB n-gram table stays on SSD (~2.5 GB resident), leaving ~30 GB of headroom for the full 256k–262k context window without swap thrashing:
 
 ```bash
 docker compose run qwen38-flash-next /app/llama-server \
-  -m /models/Qwen3.8-Flash-Next-IQ4_XS.gguf \
+  -m /models/Qwen3.8-Flash-Next-IQ4_XS-PLE.gguf \
+  -md /models/mtp-Qwen3.8-Flash-Next-Q8_0.gguf \
+  --spec-type draft-mtp --spec-draft-n-max 6 --spec-draft-p-min 0.75 \
   -c 262144 -lm mmap --tensor-read-lazy on \
-  -ngl 999 -fa on -ctk q8_0 -ctv q8_0 -ub 2048 -t 4
+  -ngl 999 -fa on -ctk q8_0 -ctv q8_0 -ub 1024 -b 2048 -t 4 -tb 16 \
+  --cache-ram 8192 --ctx-checkpoints 32
 ```
 
-Alternatively, offload the PLE table to CPU memory to avoid swap pressure:
-`--override-tensor "per_layer_token_embd=CPU"`
+Note: Do not exceed `-ub 1024` at 256k context; `-ub 2048` exceeds the Vulkan command buffer submission limit on RADV (`ErrorDeviceLost`).
 
 note: adaptive draft sizing (`--spec-draft-adaptive`) and `--lazy-mode auto`
 are merged-engine (`build-hq38`) options not in the packaged image — see

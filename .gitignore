@@ -5,3 +5,6 @@ weights
 .omo/
 wiki-*.parquet
 corpus/
+session-*.md
+__pycache__/
+*.pyc

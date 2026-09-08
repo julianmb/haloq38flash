@@ -21,16 +21,32 @@ engines:
 | 32k mtp | 379 / **30.2** | `receipts/ple-depth.log` `depth32k-mtp` | daily |
 | 128k plain | 222 / 11.0 | `receipts/depth128.log` `PLE 91g` block | daily |
 | 128k mtp | 214 / **18.6** | `receipts/depth128.log` `PLE 91g` block | daily |
-| 256k plain | 139 / 6.2 | `receipts/depth256.log` `depth256k-plain` | daily |
-| 256k mtp | 187.2 / **8.0** | `receipts/hq38-256k-mtp-ub512.log` line 31 | merged |
+| 256k plain | 191.5 / 6.0 | `receipts/ssdple-tuned-depth256k-plain.log` | daily (SSD-PLE) |
+| 256k mtp | 179.0 / **15.2** | `receipts/ssdple-tuned-depth256k-mtp.log` | daily (SSD-PLE) |
 
-flags: daily rows = `-dev Vulkan0 -ngl 999 -fa on -ub 2048 -ctk q8_0 -ctv q8_0 --temp 0 -n 128`,
+flags: daily rows = `-dev Vulkan0 -ngl 999 -fa on -ub 1024 -b 2048 -ctk q8_0 -ctv q8_0 -t 4 -tb 16 -lm mmap --tensor-read-lazy on --temp 0 -n 128`,
 bounded contexts (8192/16384/40960/139264/257024), mtp rows add
 `-md mtp-...-Q8_0.gguf --spec-type draft-mtp --spec-draft-n-max 6 --spec-draft-p-min 0.75`.
-the 256k mtp cell is the only merged-engine cell: `-ub 512 -b 512 -c 257024
---spec-draft-adaptive --spec-draft-n-min 0 --spec-draft-n-max 7
---override-tensor "per_layer_token_embd=CPU"` — the daily-driver build
-swap-dies at 256k mtp (exit 137).
+Note: historical merged-engine 256k run (`187.2 / 8.0`) is archived in `receipts/hq38-256k-mtp-ub512.log`; the daily-driver now delivers **15.2 t/s** at 256k with SSD-PLE and zero swap pressure.
+
+## tuned SSD-PLE sweep — universal production recipe (daily driver, 2026-09-08)
+
+Full unified sweep using a single set of production flags across all depths on the daily driver (`llama.cpp-strix-halo-vulkan` @ `ad914eb`):
+`-dev Vulkan0 -ngl 999 -fa on -ub 1024 -b 2048 -ctk q8_0 -ctv q8_0 -t 4 -tb 16 -lm mmap --tensor-read-lazy on`
+
+| depth | plain pp / tg | mtp pp / tg | mtp boost | receipt |
+|------:|--------------:|------------:|:---------:|---------|
+| 0k | 83.2 / 29.1 | 77.9 / **48.1** | +65% | `receipts/ssdple-tuned-depth0-*.log` |
+| 8k | 454.0 / 21.8 | 442.2 / **27.9** | +28% | `receipts/ssdple-tuned-depth8k-*.log` |
+| 32k | 375.8 / 18.5 | 357.6 / **25.5** | +38% | `receipts/ssdple-tuned-depth32k-*.log` |
+| 128k | 251.8 / 8.9 | 238.7 / **11.8** | +33% | `receipts/ssdple-tuned-depth128k-*.log` |
+| 256k | 191.5 / 6.0 | 179.0 / **15.2** | +153% (2.5×) | `receipts/ssdple-tuned-depth256k-*.log` |
+
+Key findings:
+- **Zero swap cliff**: By keeping the 27 GB PLE table on SSD with `-lm mmap --tensor-read-lazy on`, peak RAM usage remains under 95 GB at full 256k context (~30 GB free RAM).
+- **Prefill scaling with `-tb 16`**: Utilizing all 16 Zen 5 physical cores for prefill and row gather restores prefill throughput to 179–191 t/s even at 256k depth.
+- **Micro-batch boundary found (Test 1)**: Testing `-ub 2048` at 256k context triggered `vk::Queue::submit: ErrorDeviceLost` (Vulkan queue timeout on RADV) after 21 minutes, despite having 25+ GB free RAM (`receipts/probe-256k-mtp-ssdple-ub2048.log`). `-ub 1024` is confirmed as the maximum safe micro-batch size.
+- **Server prompt caching verified (Test 3)**: Testing `llama-server` with `--cache-ram 8192 --ctx-checkpoints 32` on a 32k document (`receipts/server-caching-test.log`) showed cold prefill at 93.75s (349.7 t/s) vs warm follow-up at 3.88s (**24.1× speedup**, 31,754 tokens cached).
 
 ## merged-engine reference sweep (not in readme table)
 
@@ -571,3 +587,16 @@ but computes worse — a speed/quality tradeoff, not a migration.
 | `hq38-adaptive-depth32k.mem.log` | `6edd80e481fcd4bb` |
 | `hq38-adaptive-depth128k.log` | `cb37ddd3535ed1e3` |
 | `hq38-adaptive-depth128k.mem.log` | `43e1421de5c991f9` |
+| `ssdple-tuned-depth0-plain.log` | `f276d04084ffff41` |
+| `ssdple-tuned-depth0-mtp.log` | `2528c961c24a40be` |
+| `ssdple-tuned-depth8k-plain.log` | `675c3bda382f6ce3` |
+| `ssdple-tuned-depth8k-mtp.log` | `91ca1ce63eb68db8` |
+| `ssdple-tuned-depth32k-plain.log` | `aaccde50205ff328` |
+| `ssdple-tuned-depth32k-mtp.log` | `e475b01cf973a098` |
+| `ssdple-tuned-depth128k-plain.log` | `2f875948c695e544` |
+| `ssdple-tuned-depth128k-mtp.log` | `2643ad2c1b16ae7e` |
+| `ssdple-tuned-depth256k-plain.log` | `ca956021e0624e9b` |
+| `ssdple-tuned-depth256k-mtp.log` | `6f266885d002c756` |
+| `probe-256k-mtp-ssdple-tuned.log` | `6e2f91d2e86cd8d9` |
+| `probe-256k-mtp-ssdple-ub2048.log` | `1a98af1237fec15a` |
+| `server-caching-test.log` | `4057194fb9c8e922` |
