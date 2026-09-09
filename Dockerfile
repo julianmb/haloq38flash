@@ -27,7 +27,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # add kisak ppa for recent mesa/radv (gfx1151 needs >= 24.x)
 RUN apt-get update && apt-get install -y software-properties-common gpg-agent \
-    && add-apt-repository -y ppa:kisak/kisak \
+    && add-apt-repository -y ppa:kisak/kisak-mesa \
     && apt-get update && apt-get install -y \
     mesa-vulkan-drivers vulkan-tools libvulkan1 \
     libcurl4 \
