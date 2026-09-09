@@ -643,4 +643,11 @@ Candidate engine `halo-box-strix-llama.cpp` (`5f851647f`) qualified and tested f
 | `knob-32k-07-threads-t6.log` | `397c2a7863984279` |
 | `server-caching-halobox.log` | `4057194fb9c8e922` |
 | `server-prompt-cache-32k.log` | `fa8e2f447cef9962` |
+| `halobox-256k-ub2048.log` | `c6de3421ed066807` |
+| `halobox-256k-ub2048.log.mem.log` | `e1ca9f8ea939a19e` |
+
+### Physical Microbatch Limit at 256k Context:
+- Testing `-ub 2048` at 256k on `halo-box` (`5f851647f`) confirmed that even with bounded command buffers (`GGML_VK_MAX_MB_PER_SUBMIT=2048`), individual 2048-token dispatch dispatches at extreme depth exceed the kernel queue timeout threshold (`The CS has been cancelled because the context is lost. This context is innocent`), failing with `ErrorDeviceLost`.
+- **Verdict**: `-ub 1024 -b 2048` is the absolute hardware-optimal microbatch ceiling for 256k context on AMD Strix Halo Vulkan.
+
 

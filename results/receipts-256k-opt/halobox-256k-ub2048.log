@@ -1,0 +1,75 @@
+ggml_vulkan: MUL_MAT_ID f16-B path engaged (GGML_VK_MMID_F16B)
+radv/amdgpu: The CS has been cancelled because the context is lost. This context is innocent.
+15.51.330.261 E ggml_vulkan: device lost on Vulkan0
+15.51.332.344 E srv  update_slots: decode() failed: vk::Queue::submit: ErrorDeviceLost
+15.51.332.353 E srv    send_error: task id = 0, error: decode() failed: vk::Queue::submit: ErrorDeviceLost
+15.51.332.388 E ggml_vulkan: device lost on Vulkan0
+[New LWP 1291640]
+[New LWP 1291639]
+[New LWP 1291638]
+[New LWP 1291412]
+[New LWP 1291411]
+[New LWP 1291410]
+[New LWP 1291409]
+[New LWP 1291408]
+[New LWP 1291407]
+[New LWP 1291406]
+[New LWP 1291405]
+[New LWP 1291404]
+[New LWP 1291403]
+[New LWP 1291402]
+[New LWP 1291401]
+[New LWP 1291400]
+[New LWP 1291399]
+[New LWP 1291398]
+[New LWP 1291397]
+[New LWP 1291396]
+[New LWP 1291395]
+[New LWP 1291394]
+[New LWP 1291393]
+[New LWP 1291392]
+[New LWP 1291391]
+[New LWP 1291390]
+[New LWP 1291389]
+[New LWP 1291388]
+[New LWP 1291387]
+[New LWP 1291386]
+[New LWP 1291385]
+[New LWP 1291384]
+[New LWP 1291383]
+[New LWP 1291382]
+[New LWP 1291381]
+[New LWP 1291380]
+[New LWP 1291379]
+[New LWP 1291378]
+[New LWP 1291377]
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <https://debuginfod.ubuntu.com>
+Enable debuginfod for this session? (y or [n]) [answered N; input not from terminal]
+Debuginfod has been disabled.
+To make this setting permanent, add 'set debuginfod enabled off' to .gdbinit.
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+0x000076b55f498e51 in __futex_abstimed_wait_common64 (private=128, cancel=true, abstime=0x0, op=265, expected=1291380, futex_word=0x76b53bfff990) at ./nptl/futex-internal.c:57
+warning: 57	./nptl/futex-internal.c: No such file or directory
+#0  0x000076b55f498e51 in __futex_abstimed_wait_common64 (private=128, cancel=true, abstime=0x0, op=265, expected=1291380, futex_word=0x76b53bfff990) at ./nptl/futex-internal.c:57
+57	in ./nptl/futex-internal.c
+#1  __futex_abstimed_wait_common (cancel=true, private=128, abstime=0x0, clockid=0, expected=1291380, futex_word=0x76b53bfff990) at ./nptl/futex-internal.c:87
+87	in ./nptl/futex-internal.c
+#2  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x76b53bfff990, expected=1291380, clockid=clockid@entry=0, abstime=abstime@entry=0x0, private=private@entry=128) at ./nptl/futex-internal.c:139
+139	in ./nptl/futex-internal.c
+#3  0x000076b55f49e883 in __pthread_clockjoin_ex (threadid=130520767788736, thread_return=0x0, clockid=0, abstime=0x0, block=<optimised out>) at ./nptl/pthread_join_common.c:102
+warning: 102	./nptl/pthread_join_common.c: No such file or directory
+#4  0x000076b55f8ece33 in std::thread::join() () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#5  0x000076b56033f8b5 in cli_context::shutdown() () from /home/user/source/haloq38flash/repos/halo-box-strix-llama.cpp/build-5f851/bin/libllama-cli-impl.so
+#6  0x000076b560340712 in cli_context::~cli_context() () from /home/user/source/haloq38flash/repos/halo-box-strix-llama.cpp/build-5f851/bin/libllama-cli-impl.so
+#7  0x000076b5603323ca in llama_cli(int, char**) () from /home/user/source/haloq38flash/repos/halo-box-strix-llama.cpp/build-5f851/bin/libllama-cli-impl.so
+#8  0x000076b55f42a1ca in __libc_start_call_main (main=main@entry=0x5b3719b1d390 <main>, argc=argc@entry=45, argv=argv@entry=0x7ffd2020fe98) at ../sysdeps/nptl/libc_start_call_main.h:58
+warning: 58	../sysdeps/nptl/libc_start_call_main.h: No such file or directory
+#9  0x000076b55f42a28b in __libc_start_main_impl (main=0x5b3719b1d390 <main>, argc=45, argv=0x7ffd2020fe98, init=<optimised out>, fini=<optimised out>, rtld_fini=<optimised out>, stack_end=0x7ffd2020fe88) at ../csu/libc-start.c:360
+warning: 360	../csu/libc-start.c: No such file or directory
+#10 0x00005b3719b1d3c5 in _start ()
+[Inferior 1 (process 1291373) detached]
+terminate called after throwing an instance of 'vk::DeviceLostError'
+  what():  vk::Queue::submit: ErrorDeviceLost
