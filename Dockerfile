@@ -8,6 +8,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y \
     build-essential cmake ninja-build git ccache \
     libvulkan-dev glslc vulkan-tools \
+    spirv-headers spirv-tools glslang-dev libshaderc-dev \
     libcurl4-openssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
@@ -17,7 +18,6 @@ RUN git clone https://github.com/halo-box/strix-llama.cpp /src/engine \
 
 RUN cmake -B /src/engine/build -S /src/engine \
     -DCMAKE_BUILD_TYPE=Release -DGGML_VULKAN=ON \
-    -DLLAMA_CURL=ON \
     && cmake --build /src/engine/build --parallel $(nproc) \
        --target llama-server llama-cli llama-bench llama-perplexity
 
