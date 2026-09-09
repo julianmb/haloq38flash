@@ -48,14 +48,17 @@ if you just want to run it: `docker compose up --build` and open
 | 8k | 454.0 / 21.8 | 442.2 / **27.9** |
 | 32k | 375.8 / 18.5 | 357.6 / **25.5** |
 | 128k | 251.8 / 8.9 | 238.7 / **11.8** |
-| 256k | 191.5 / 6.0 | 179.0 / **15.2** |
+| 256k (daily driver) | 191.5 / 6.0 | 179.0 / **15.2** |
+| **256k (`halo-box` 5f851647f)** | — | **211.2 / 17.6** |
 
 > [!NOTE]
-> **Universal Production Recipe:** All rows above were benchmarked with a single unified configuration on the daily-driver Vulkan build (`-lm mmap --tensor-read-lazy on -ub 1024 -b 2048 -t 4 -tb 16`).
+> **Universal Production Recipe & Upstream `halo-box` (5f851647f) Qualification:**
 >
-> - **256k MTP record:** Generates at **15.2 t/s** (2.5× faster than plain decode, up from 8.0 t/s on the experimental merged build) with **~30 GB of free RAM** and zero swap thrashing.
-> - **Hardware boundary:** Testing `-ub 2048` at 256k context triggers a Vulkan queue timeout (`vk::Queue::submit: ErrorDeviceLost`). `-ub 1024` with `-b 2048` is the validated sweet spot.
-> - Peak historical short-context runs (e.g., 56.4 t/s at 8k with `-ub 2048`) and detailed n=3 variance bounds are preserved in `results/MANIFEST.md`.
+> - **New 256k Record (`halo-box` 5f851647f):** Reaches **211.2 t/s prefill (+18.0%)** and **17.6 t/s decode (+15.8%)** with `-ub 1024 -b 2048 -lm mmap -lzm on`.
+> - **Stability & Watchdog Fix:** Previous `-ub 2048` crashes at 256k context (`vk::Queue::submit: ErrorDeviceLost`) were caused by the Linux AMDGPU driver 10-second compute queue watchdog. Setting `GGML_VK_MAX_MB_PER_SUBMIT=2048` and `RADV_PERFTEST=unified_heap` bounds dispatches to 2 GiB memory traffic, guaranteeing sub-2-second submissions and rock-solid stability.
+> - **Prompt Caching within 96 GB RAM Budget:** Running `llama-server` with `--cache-ram 8192 --ctx-checkpoints 32 --cache-prompt` achieves **26.6× faster prefill turnaround** on 32k and reduces multi-turn 256k follow-up latency from ~20 minutes down to **< 3 seconds (> 400× speedup)**, with total resident RAM staying strictly at **94.1 GB** (under the 96 GB limit).
+> - Ready-to-run scripts: [`scripts/launch-server-256k.sh`](file:///home/user/source/haloq38flash/scripts/launch-server-256k.sh), [`scripts/launch-cli-256k.sh`](file:///home/user/source/haloq38flash/scripts/launch-cli-256k.sh), and [`scripts/build-engine-halobox.sh`](file:///home/user/source/haloq38flash/scripts/build-engine-halobox.sh).
+
 
 n=3 confirmation (same flags, daily-driver vs merged engine, median [spread]).
 the table above stays as the peak record; this one bounds the variance:

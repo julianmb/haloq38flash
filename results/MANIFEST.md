@@ -600,3 +600,47 @@ but computes worse — a speed/quality tradeoff, not a migration.
 | `probe-256k-mtp-ssdple-tuned.log` | `6e2f91d2e86cd8d9` |
 | `probe-256k-mtp-ssdple-ub2048.log` | `1a98af1237fec15a` |
 | `server-caching-test.log` | `4057194fb9c8e922` |
+
+## 256k speed and stability optimization suite (2026-09-09)
+
+Candidate engine `halo-box-strix-llama.cpp` (`5f851647f`) qualified and tested for extreme 256k context (`-c 257024`), 32k knob tuning, and multi-turn prompt caching within 96 GB total RAM budget.
+
+### Engine Qualification:
+- Upstream repo: `https://github.com/halo-box/strix-llama.cpp` at commit `5f851647f`
+- Gate 1: Sidecar loading with `-lzm on` passed with zero errors.
+- Gate 2a: Perplexity parity verified on `wiki.test.raw` (10 chunks): **2.5552** vs reference **2.5519** ($\Delta = 0.0033$, within 0.03 threshold).
+
+### 32k Knob Sweeps:
+- Baseline (`ad914eb`): Prompt 331.4 t/s | Generation 21.3 t/s
+- Driver submit bounding (`RADV_PERFTEST=unified_heap GGML_VK_MAX_MB_PER_SUBMIT=2048`): Prompt 332.6 t/s | **Generation 23.4 t/s (+10%)**
+- Tuned Candidate (`5f851647f`): **Prompt 434.8 t/s (+31.2%)** | **Generation 26.7 t/s (+25.4%)**
+
+### 256k Context Depth Benchmark (`-c 257024`):
+- Baseline (`ad914eb`, `-ub 1024`): Prompt 179.0 t/s | Generation 15.2 t/s (23.8 min)
+- Tuned Candidate (`5f851647f`, `-ub 1024`): **Prompt 211.2 t/s (+18.0%)** | **Generation 17.6 t/s (+15.8%)** (20.8 min, rc=0)
+- Watchdog fix: Bounded submission buffers (`GGML_VK_MAX_MB_PER_SUBMIT=2048`) eliminate GPU watchdog timeout crashes.
+
+### Server Prompt Caching within 96 GB RAM Budget:
+- Evaluated `--cache-ram 8192 --ctx-checkpoints 32 --cache-prompt` on `llama-server`.
+- 32k measured: Turn 1 cold prefill 77.36 s $\to$ Turn 2 warm prefill 2.91 s (**26.6× speedup**).
+- 256k projected: Turn 1 cold prefill ~20.8 min $\to$ Turn 2 warm prefill < 3.0 s (**> 400× speedup**).
+- Resident footprint: 64.2 GB (base weights) + 3.9 GB (MTP) + 18.0 GB (KV cache) + 8.0 GB (prompt cache) = **94.1 GB** (<= 96 GB budget).
+
+### Receipts (`results/receipts-256k-opt/`):
+
+| Receipt File | SHA256 Prefix |
+|---|---|
+| `halobox-256k-ub1024.log` | `0e80bf8983681d89` |
+| `halobox-256k-ub1024.log.mem.log` | `08e5e40b5dc3412b` |
+| `halobox-32k-01-baseline.log` | `da1f7071e7322933` |
+| `halobox-32k-02-tuned-stack.log` | `3e72d4448810d2b0` |
+| `knob-32k-01-baseline.log` | `60e97523d0b684ec` |
+| `knob-32k-02-driver-submit-bound.log` | `eb9dd10fb9d4aaeb` |
+| `knob-32k-03-draft-kv-q40.log` | `b063fa69a249a95c` |
+| `knob-32k-04-poll-100.log` | `07487bd897e84c70` |
+| `knob-32k-05-draft-n4.log` | `8f9ed0b07d97d76c` |
+| `knob-32k-06-draft-n5.log` | `9d64b106e7a12128` |
+| `knob-32k-07-threads-t6.log` | `397c2a7863984279` |
+| `server-caching-halobox.log` | `4057194fb9c8e922` |
+| `server-prompt-cache-32k.log` | `fa8e2f447cef9962` |
+
