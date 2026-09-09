@@ -18,7 +18,7 @@ exec "$BIN" \
     --spec-draft-n-max 6 \
     --spec-draft-p-min 0.75 \
     -dev Vulkan0 -ngl 999 -fa on \
-    -c 257024 -ub 1024 -b 2048 \
+    -c 257024 -ub 1024 -b 4096 \
     -ctk q8_0 -ctv q8_0 \
     -t 4 -tb 16 \
     -lm mmap -lzm on \
