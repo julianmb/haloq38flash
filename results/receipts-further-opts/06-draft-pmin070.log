@@ -1,0 +1,8 @@
+error while handling argument "-f": error: failed to open file '/home/user/source/haloq38flash/results/filler/filler-32k.txt'
+
+
+usage:
+-f,    --file FNAME                     a file containing the prompt (default: none)
+
+
+to show complete usage, run with -h
