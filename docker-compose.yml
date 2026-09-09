@@ -13,12 +13,15 @@ services:
     volumes:
       - /mnt/ssd2/models/qwen38-flash-next:/models:ro
     ports:
-      - "8080:8080"
+      - "${PORT:-8089}:8080"
     environment:
       - LD_LIBRARY_PATH=/app
+      - RADV_PERFTEST=unified_heap
+      - GGML_VK_MAX_MB_PER_SUBMIT=2048
     # override CMD to change context, quant, or add mtp:
     # docker compose run qwen38-flash-next \
     #   /app/llama-server -m /models/Qwen3.8-Flash-Next-IQ4_XS-PLE.gguf \
-    #   -c 131072 -md /models/mtp-Qwen3.8-Flash-Next-Q8_0.gguf \
+    #   -c 257024 -ub 1024 -b 2048 -lm mmap -lzm on \
+    #   -md /models/mtp-Qwen3.8-Flash-Next-Q8_0.gguf \
     #   --spec-type draft-mtp --spec-draft-n-max 6 --spec-draft-p-min 0.75 \
-    #   --cache-ram 8192 --ctx-checkpoints 32
+    #   --cache-ram 8192 --ctx-checkpoints 32 --cache-prompt

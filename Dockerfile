@@ -1,5 +1,5 @@
 # haloq38flash — qwen3.8-flash-next on strix halo (vulkan/radv)
-# builds the nathanw1014 strix-halo-vulkan engine and serves with the
+# builds the halo-box strix-llama.cpp engine (commit 5f851647f) and serves with the
 # recommended flags. models are mounted, not baked in.
 
 # ---- stage 1: build ----
@@ -11,13 +11,15 @@ RUN apt-get update && apt-get install -y \
     libcurl4-openssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
-RUN git clone --depth 1 -b strix-halo-vulkan \
-    https://github.com/Nathanw1014/llama.cpp /src/engine
+RUN git clone https://github.com/halo-box/strix-llama.cpp /src/engine \
+    && cd /src/engine \
+    && git checkout 5f851647f
+
 RUN cmake -B /src/engine/build -S /src/engine \
     -DCMAKE_BUILD_TYPE=Release -DGGML_VULKAN=ON \
     -DLLAMA_CURL=ON \
     && cmake --build /src/engine/build --parallel $(nproc) \
-       --target llama-server llama-cli llama-bench
+       --target llama-server llama-cli llama-bench llama-perplexity
 
 # ---- stage 2: runtime ----
 FROM ubuntu:24.04
@@ -34,11 +36,14 @@ RUN apt-get update && apt-get install -y software-properties-common gpg-agent \
 COPY --from=build /src/engine/build/bin/llama-server /app/llama-server
 COPY --from=build /src/engine/build/bin/llama-cli /app/llama-cli
 COPY --from=build /src/engine/build/bin/llama-bench /app/llama-bench
+COPY --from=build /src/engine/build/bin/llama-perplexity /app/llama-perplexity
 COPY --from=build /src/engine/build/bin/libggml*.so* /app/
 COPY --from=build /src/engine/build/bin/libllama*.so* /app/
 
 RUN ldconfig /app 2>/dev/null; true
 ENV LD_LIBRARY_PATH=/app
+ENV RADV_PERFTEST=unified_heap
+ENV GGML_VK_MAX_MB_PER_SUBMIT=2048
 
 # models volume
 VOLUME /models
@@ -48,8 +53,14 @@ EXPOSE 8080
 
 CMD ["/app/llama-server", \
      "-m", "/models/Qwen3.8-Flash-Next-IQ4_XS-PLE.gguf", \
-     "-ngl", "999", "-fa", "on", \
+     "-md", "/models/mtp-Qwen3.8-Flash-Next-Q8_0.gguf", \
+     "--spec-type", "draft-mtp", \
+     "--spec-draft-n-max", "6", \
+     "--spec-draft-p-min", "0.75", \
+     "-dev", "Vulkan0", "-ngl", "999", "-fa", "on", \
+     "-c", "40960", "-ub", "1024", "-b", "2048", \
      "-ctk", "q8_0", "-ctv", "q8_0", \
-     "-c", "32768", "-ub", "2048", "-t", "4", \
-     "--cache-ram", "8192", "--ctx-checkpoints", "32", \
+     "-t", "4", "-tb", "16", \
+     "-lm", "mmap", "-lzm", "on", \
+     "--cache-ram", "8192", "--ctx-checkpoints", "32", "--cache-prompt", \
      "--jinja", "--host", "0.0.0.0", "--port", "8080"]
