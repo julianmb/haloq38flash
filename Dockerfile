@@ -12,12 +12,14 @@ RUN apt-get update && apt-get install -y \
     libcurl4-openssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
+COPY patches/ /patches/
 RUN git clone https://github.com/halo-box/strix-llama.cpp /src/engine \
     && cd /src/engine \
-    && git checkout 5f851647f
+    && git checkout dff600487 \
+    && git apply /patches/0001-mtp-recurrent-rollback-qwen4exp.patch
 
 RUN cmake -B /src/engine/build -S /src/engine \
-    -DCMAKE_BUILD_TYPE=Release -DGGML_VULKAN=ON \
+    -DCMAKE_BUILD_TYPE=Release -DGGML_VULKAN=ON -G Ninja \
     && cmake --build /src/engine/build --parallel $(nproc) \
        --target llama-server llama-cli llama-bench llama-perplexity
 
