@@ -44,6 +44,7 @@ COPY --from=build /src/engine/build/bin/*.so* /app/
 
 RUN ldconfig /app 2>/dev/null; true
 ENV LD_LIBRARY_PATH=/app
+ENV PATH="/app:${PATH}"
 ENV RADV_PERFTEST=unified_heap
 ENV GGML_VK_MAX_MB_PER_SUBMIT=2048
 ENV GGML_VK_MMID_ROWLISTS=1
