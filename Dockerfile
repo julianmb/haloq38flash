@@ -43,6 +43,13 @@ RUN ldconfig /app 2>/dev/null; true
 ENV LD_LIBRARY_PATH=/app
 ENV RADV_PERFTEST=unified_heap
 ENV GGML_VK_MAX_MB_PER_SUBMIT=2048
+ENV GGML_VK_MMID_ROWLISTS=1
+ENV GGML_VK_MMID_SMALLN=1
+ENV GGML_VK_MMID_BM64=1
+ENV GGML_VK_MMID_WAVE32=1
+ENV GGML_VK_MMID_F16B=1
+ENV GGML_VK_MMID_M128=1
+ENV GGML_VK_FA_WAVE32=0
 
 # models volume
 VOLUME /models
@@ -52,12 +59,12 @@ EXPOSE 8080
 
 CMD ["/app/llama-server", \
      "-m", "/models/Qwen3.8-Flash-Next-IQ4_XS-PLE.gguf", \
-     "-md", "/models/mtp-Qwen3.8-Flash-Next-Q8_0.gguf", \
+     "-md", "/models/mtp-Qwen3.8-Flash-Next-shared-Q8_0.gguf", \
      "--spec-type", "draft-mtp", \
      "--spec-draft-n-max", "6", \
      "--spec-draft-p-min", "0.75", \
      "-dev", "Vulkan0", "-ngl", "999", "-fa", "on", \
-     "-c", "40960", "-ub", "1024", "-b", "4096", \
+     "-c", "40960", "-ub", "2048", "-b", "4096", \
      "-ctk", "q8_0", "-ctv", "q8_0", \
      "-t", "4", "-tb", "16", \
      "-lm", "mmap", "-lzm", "on", \

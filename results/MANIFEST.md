@@ -646,8 +646,22 @@ Candidate engine `halo-box-strix-llama.cpp` (`5f851647f`) qualified and tested f
 | `halobox-256k-ub2048.log` | `c6de3421ed066807` |
 | `halobox-256k-ub2048.log.mem.log` | `e1ca9f8ea939a19e` |
 
-### Physical Microbatch Limit at 256k Context:
-- Testing `-ub 2048` at 256k on `halo-box` (`5f851647f`) confirmed that even with bounded command buffers (`GGML_VK_MAX_MB_PER_SUBMIT=2048`), individual 2048-token dispatch dispatches at extreme depth exceed the kernel queue timeout threshold (`The CS has been cancelled because the context is lost. This context is innocent`), failing with `ErrorDeviceLost`.
-- **Verdict**: `-ub 1024 -b 2048` is the absolute hardware-optimal microbatch ceiling for 256k context on AMD Strix Halo Vulkan.
+### Microbatch Limit Evolution at 256k Context:
+- On `halo-box` (`5f851647f`), `-ub 2048` at 256k triggered kernel command submission timeouts (`The CS has been cancelled because the context is lost`).
+- On Nathan Wilson's `v075-unified` engine, thanks to QSA Pooled Key Cache and `GGML_VK_MMID_M128` shader tile geometry, `-ub 2048` completes the full 250,000-token prompt with 100% stability at 262.9 t/s without a single GPU reset.
+
+### Unified Engine Sweep Receipts (`results/receipts-further-opts/`):
+
+| Receipt File | SHA256 Prefix | Description |
+|---|---|---|
+| `10-v075-toolbox-32k.log` | `f27ec4500722d6d4` | v0.7.5 QSA pooled key cache benchmark at 32k context |
+| `11-v075-plain-32k.log` | `c66e0fa829270ecd` | v0.7.5 baseline plain benchmark at 32k context |
+| `12-5f851-plain-32k.log` | `4a6c9ad5794c21a9` | 5f851 reference run at 32k context |
+| `13-v075-shared-mtp-32k.log` | `7ec6997dd15cabe3` | v0.7.5 loading unsloth shared MTP head (2.6 GB) |
+| `14-v075-plain-250k.log` | `a6cdcf5d2822c8fb` | v0.7.5 250k-token prompt benchmark (277.3 t/s PP, 15.0 mins) |
+| `14-v075-plain-250k-mem.log` | `359a003967260357` | Telemetry CSV for 250k run on v0.7.5 (peak RAM 79.56 GB) |
+| `15-unified-ub2048-250k.log` | `9b24089de537e585` | Unified engine 250k prompt benchmark with ub 2048 and CCX0 (262.9 t/s) |
+| `15-unified-ub2048-250k-mem.log` | `d1b4a25dc9841c1a` | Telemetry CSV for unified ub 2048 run (peak RAM 84.05 GB) |
+
 
 

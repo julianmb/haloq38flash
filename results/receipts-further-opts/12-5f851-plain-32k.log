@@ -1,0 +1,11 @@
+amdgpu: amdgpu_query_sw_info(amdgpu_sw_info_address_prt_wa_control_bit) failed.
+error while handling argument "-dev": invalid device: Vulkan0
+
+usage:
+-dev,  --device <dev1,dev2,..>          comma-separated list of devices to use for offloading (none = don't
+                                        offload)
+                                        use --list-devices to see a list of available devices
+                                        (env: LLAMA_ARG_DEVICE)
+
+
+to show complete usage, run with -h

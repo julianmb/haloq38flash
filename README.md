@@ -46,18 +46,21 @@ if you just want to run it: `docker compose up --build` and open
 |------:|:-----------:|:---------:|
 | 0 | 83.2 / 29.1 | 77.9 / **48.1** |
 | 8k | 454.0 / 21.8 | 442.2 / **27.9** |
-| 32k | 375.8 / 18.5 | 357.6 / **25.5** |
+| 32k (`v075-unified`) | **544.4** / 24.9 | 500.4 / **29.6** |
 | 128k | 251.8 / 8.9 | 238.7 / **11.8** |
 | 256k (daily driver) | 191.5 / 6.0 | 179.0 / **15.2** |
-| **256k (`halo-box` 5f851647f)** | — | **211.2 / 17.6** |
+| 256k (`halo-box` 5f851647f) | 211.2 / 17.6 | — |
+| **256k (`v075-unified` ub2048)** | **277.3** / 17.1 | **262.9 / 16.9** |
 
 > [!NOTE]
-> **Universal Production Recipe & Upstream `halo-box` (5f851647f) Qualification:**
+> **Unified Engine (`v075-unified`) Breakthroughs:**
 >
-> - **New 256k Record (`halo-box` 5f851647f):** Reaches **211.2 t/s prefill (+18.0%)** and **17.6 t/s decode (+15.8%)** with `-ub 1024 -b 2048 -lm mmap -lzm on`.
-> - **Stability & Watchdog Fix:** Previous `-ub 2048` crashes at 256k context (`vk::Queue::submit: ErrorDeviceLost`) were caused by the Linux AMDGPU driver 10-second compute queue watchdog. Setting `GGML_VK_MAX_MB_PER_SUBMIT=2048` and `RADV_PERFTEST=unified_heap` bounds dispatches to 2 GiB memory traffic, guaranteeing sub-2-second submissions and rock-solid stability.
-> - **Prompt Caching within 96 GB RAM Budget:** Running `llama-server` with `--cache-ram 8192 --ctx-checkpoints 32 --cache-prompt` achieves **26.6× faster prefill turnaround** on 32k and reduces multi-turn 256k follow-up latency from ~20 minutes down to **< 3 seconds (> 400× speedup)**, with total resident RAM staying strictly at **94.1 GB** (under the 96 GB limit).
-> - Ready-to-run scripts: [`scripts/launch-server-256k.sh`](file:///home/user/source/haloq38flash/scripts/launch-server-256k.sh), [`scripts/launch-cli-256k.sh`](file:///home/user/source/haloq38flash/scripts/launch-cli-256k.sh), and [`scripts/build-engine-halobox.sh`](file:///home/user/source/haloq38flash/scripts/build-engine-halobox.sh).
+> - **Recurrent Rollback MTP (PR #28123 + PR #26):** Solves the 112 MB state checkpoint serialization tax on rejected draft tokens by enabling in-place convolutional state rollback for `LLM_ARCH_QWEN4EXP`. MTP speculative decode doubles from 15.5 t/s to **29.6 t/s (+91%)**.
+> - **Unsloth Shared MTP Head Support:** Fully supports `mtp-Qwen3.8-Flash-Next-shared-Q8_0.gguf` (2.6 GB), borrowing embeddings and LM head directly from the base model and saving 1.54 GB of resident RAM.
+> - **QSA Pooled Key Cache & Microbatch 2048:** Nathan Wilson's QSA pooling reduces KV cache footprint while `-ub 2048` unlocks the `GGML_VK_MMID_M128` shader tile geometry, pushing 250k prompt prefill to **277.3 t/s** (cold ingestion down to 15.0 minutes).
+> - **AMDGPU Watchdog & CCX0 Affinity:** `GGML_VK_MAX_MB_PER_SUBMIT=2048` prevents GPU watchdog timeouts, while `taskset -c 0-7` localizes execution to Zen 5 CCX0, eliminating interconnect bounce.
+> - **Prompt Caching within 96 GB RAM Budget:** Multi-turn follow-ups drop from ~15 minutes to **< 3 seconds (> 300× speedup)** with peak memory capped at **84.1–94.1 GB** (leaving 34–42 GB free system RAM).
+> - Ready-to-run scripts: [`scripts/build-engine-unified.sh`](file:///home/user/source/haloq38flash/scripts/build-engine-unified.sh), [`scripts/launch-server-256k.sh`](file:///home/user/source/haloq38flash/scripts/launch-server-256k.sh), and [`scripts/bench-unified-250k-ub2048.sh`](file:///home/user/source/haloq38flash/scripts/bench-unified-250k-ub2048.sh).
 
 
 n=3 confirmation (same flags, daily-driver vs merged engine, median [spread]).
@@ -187,7 +190,7 @@ docker compose run qwen38-flash-next /app/llama-server \
   --cache-ram 8192 --ctx-checkpoints 32
 ```
 
-Note: Do not exceed `-ub 1024` at 256k context; `-ub 2048` exceeds the Vulkan command buffer submission limit on RADV (`ErrorDeviceLost`).
+Note: Ensure `GGML_VK_MAX_MB_PER_SUBMIT=2048` is set when using `-ub 2048` at 256k context to bound command buffer dispatches within the Linux AMDGPU driver watchdog limit.
 
 note: adaptive draft sizing (`--spec-draft-adaptive`) and `--lazy-mode auto`
 are merged-engine (`build-hq38`) options not in the packaged image — see
