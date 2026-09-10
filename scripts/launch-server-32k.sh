@@ -13,8 +13,8 @@ if [ ! -f "$MTP" ]; then
     MTP="/mnt/ssd2/models/qwen38-flash-next/mtp-Qwen3.8-Flash-Next-Q8_0.gguf"
 fi
 
-PORT="${PORT:-8080}"
-HOST="${HOST:-127.0.0.1}"
+PORT="${PORT:-8089}"
+HOST="${HOST:-0.0.0.0}"
 
 # Driver optimizations for AMD Strix Halo unified LPDDR5X
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

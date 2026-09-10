@@ -26,6 +26,8 @@ services:
       - GGML_VK_MMID_F16B=1
       - GGML_VK_MMID_M128=1
       - GGML_VK_FA_WAVE32=0
+      - OMP_PROC_BIND=close
+      - OMP_PLACES=cores
     # override CMD to change context, quant, or add mtp:
     # docker compose run qwen38-flash-next \
     #   /app/llama-server -m /models/Qwen3.8-Flash-Next-IQ4_XS-PLE.gguf \
