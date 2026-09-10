@@ -8,13 +8,14 @@ BUILD_DIR="$REPO_DIR/build-unified"
 COMMIT="dff600487" # Nathan Wilson v0.7.5 release base
 
 if [ ! -d "$REPO_DIR" ]; then
-    echo "Cloning Nathanw1014/strix-halo-llamacpp repository..."
-    git clone https://github.com/Nathanw1014/strix-halo-llamacpp.git "$REPO_DIR"
+    echo "Cloning halo-box/strix-llama.cpp repository..."
+    git clone https://github.com/halo-box/strix-llama.cpp "$REPO_DIR"
 fi
 
 cd "$REPO_DIR"
-echo "Checking out base commit $COMMIT..."
-git checkout "$COMMIT"
+echo "Fetching and checking out base commit $COMMIT..."
+git fetch origin dff60048744f99cb0af68d02be2314456b3269dc
+git checkout FETCH_HEAD
 
 echo "Applying MTP recurrent rollback patch..."
 git apply --check "$ROOT/patches/0001-mtp-recurrent-rollback-qwen4exp.patch" || true
