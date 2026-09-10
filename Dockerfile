@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 COPY patches/ /patches/
-RUN git clone https://github.com/halo-box/strix-llama.cpp /src/engine \
+RUN git clone https://github.com/Nathanw1014/strix-halo-llamacpp.git /src/engine \
     && cd /src/engine \
     && git checkout dff600487 \
     && git apply /patches/0001-mtp-recurrent-rollback-qwen4exp.patch

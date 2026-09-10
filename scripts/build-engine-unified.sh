@@ -8,8 +8,8 @@ BUILD_DIR="$REPO_DIR/build-unified"
 COMMIT="dff600487" # Nathan Wilson v0.7.5 release base
 
 if [ ! -d "$REPO_DIR" ]; then
-    echo "Cloning halo-box-strix-llama.cpp repository..."
-    git clone https://github.com/halo-box/strix-llama.cpp "$REPO_DIR"
+    echo "Cloning Nathanw1014/strix-halo-llamacpp repository..."
+    git clone https://github.com/Nathanw1014/strix-halo-llamacpp.git "$REPO_DIR"
 fi
 
 cd "$REPO_DIR"
