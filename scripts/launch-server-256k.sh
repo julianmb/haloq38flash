@@ -56,5 +56,6 @@ exec taskset -c 0-7 "$BIN" \
     -t 4 -tb 16 \
     -lm mmap -lzm on \
     --cache-ram 8192 --ctx-checkpoints 32 --cache-prompt \
+    --jinja \
     --host "$HOST" --port "$PORT" \
     "$@"
