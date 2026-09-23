@@ -5,7 +5,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 REPO_DIR="$ROOT/repos/halo-box-strix-llama.cpp"
 BUILD_DIR="$REPO_DIR/build-unified"
-COMMIT="dff600487" # Nathan Wilson v0.7.5 release base
+COMMIT="8c1c282ecb194e8f02613defcc4a07c22b6d1c08" # halo-box master 2026-09-17 (upstream sync #64 + pwilkin #63)
 
 if [ ! -d "$REPO_DIR" ]; then
     echo "Cloning halo-box/strix-llama.cpp repository..."
@@ -14,12 +14,14 @@ fi
 
 cd "$REPO_DIR"
 echo "Fetching and checking out base commit $COMMIT..."
-git fetch origin dff60048744f99cb0af68d02be2314456b3269dc
+git fetch origin "$COMMIT"
 git checkout FETCH_HEAD
 
-echo "Applying MTP recurrent rollback patch..."
-git apply --check "$ROOT/patches/0001-mtp-recurrent-rollback-qwen4exp.patch" || true
-git apply "$ROOT/patches/0001-mtp-recurrent-rollback-qwen4exp.patch" 2>/dev/null || echo "Patch already applied."
+echo "Verifying upstream recurrent rollback MTP is present (retires patches/0001-mtp-*.patch)..."
+grep -q TAG_RECURRENT_ROLLBACK_SPLITS src/models/qwen4exp.cpp \
+    || { echo "ERROR: upstream recurrent rollback missing — MTP decode will regress. Aborting." >&2; exit 1; }
+grep -q "case LLM_ARCH_QWEN4EXP:" src/llama-arch.cpp \
+    || { echo "ERROR: QWEN4EXP rs-rollback arch gate missing. Aborting." >&2; exit 1; }
 
 echo "Configuring CMake with GGML_VULKAN=ON..."
 cmake -B "$BUILD_DIR" -S . \

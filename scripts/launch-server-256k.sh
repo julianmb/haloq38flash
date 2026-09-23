@@ -61,3 +61,6 @@ exec taskset -c 0-7 "$BIN" \
     --jinja \
     --host "$HOST" --port "$PORT" \
     "$@"
+# NOTE (engine >= 8c1c282): try `-lzm on-direct` instead of `-lzm on` for the
+# 256k SSD-PLE path — explicit pread()s via the llama_ple_disk reader instead
+# of demand-paged mmap (halo-box #63). A/B before adopting; see results/MANIFEST.md.

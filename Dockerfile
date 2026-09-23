@@ -1,6 +1,9 @@
 # haloq38flash — qwen3.8-flash-next on strix halo (vulkan/radv)
-# builds the halo-box strix-llama.cpp engine (commit 5f851647f) and serves with the
-# recommended flags. models are mounted, not baked in.
+# builds the halo-box strix-llama.cpp engine (commit 8c1c282ec, 2026-09-17)
+# and serves with the recommended flags. models are mounted, not baked in.
+# NOTE: patches/0001-mtp-recurrent-rollback-qwen4exp.patch is retired —
+# upstream landed it as qwen4exp recurrent state rollback (#28123), carried
+# in via the halo-box 2026-09-15 sync, so there is nothing left to apply.
 
 # ---- stage 1: build ----
 FROM ubuntu:24.04 AS build
@@ -12,12 +15,10 @@ RUN apt-get update && apt-get install -y \
     libcurl4-openssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
-COPY patches/ /patches/
 RUN git clone https://github.com/halo-box/strix-llama.cpp /src/engine \
     && cd /src/engine \
-    && git fetch origin dff60048744f99cb0af68d02be2314456b3269dc \
-    && git checkout FETCH_HEAD \
-    && git apply /patches/0001-mtp-recurrent-rollback-qwen4exp.patch
+    && git fetch origin 8c1c282ecb194e8f02613defcc4a07c22b6d1c08 \
+    && git checkout FETCH_HEAD
 
 RUN cmake -B /src/engine/build -S /src/engine \
     -DCMAKE_BUILD_TYPE=Release -DGGML_VULKAN=ON -G Ninja \
