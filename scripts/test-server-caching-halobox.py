@@ -6,7 +6,15 @@ import json
 import subprocess
 import requests
 
-SERVER_BIN = "/home/user/source/haloq38flash/repos/halo-box-strix-llama.cpp/build-5f851/bin/llama-server"
+SERVER_BIN = os.environ.get("LLAMA_SERVER_BIN") or os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+    "repos/halo-box-strix-llama.cpp/build-unified/bin/llama-server",
+)
+if not os.path.isfile(SERVER_BIN):
+    SERVER_BIN = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        "repos/halo-box-strix-llama.cpp/build-5f851/bin/llama-server",
+    )
 PORT = 8095
 HOST = "127.0.0.1"
 BASE_URL = f"http://{HOST}:{PORT}"

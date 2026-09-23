@@ -2,9 +2,10 @@
 # Production 256k llama-server on halo-box engine with SSD-PLE, MTP, and Prompt Caching (<=96GB RAM)
 set -euo pipefail
 
-BIN="${LLAMA_SERVER_BIN:-/home/user/source/haloq38flash/repos/halo-box-strix-llama.cpp/build-unified/bin/llama-server}"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+BIN="${LLAMA_SERVER_BIN:-$ROOT/repos/halo-box-strix-llama.cpp/build-unified/bin/llama-server}"
 if [ ! -f "$BIN" ]; then
-    BIN="/home/user/source/haloq38flash/repos/halo-box-strix-llama.cpp/build-5f851/bin/llama-server"
+    BIN="$ROOT/repos/halo-box-strix-llama.cpp/build-5f851/bin/llama-server"
 fi
 
 PLE="${PLE_MODEL:-/mnt/ssd2/models/qwen38-flash-next/Qwen3.8-Flash-Next-IQ4_XS-PLE.gguf}"

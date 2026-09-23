@@ -2,9 +2,10 @@
 # Interactive 256k CLI session on halo-box engine with SSD-PLE & MTP
 set -euo pipefail
 
-BIN="${LLAMA_BIN:-/home/user/source/haloq38flash/repos/halo-box-strix-llama.cpp/build-unified/bin/llama-cli}"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+BIN="${LLAMA_BIN:-$ROOT/repos/halo-box-strix-llama.cpp/build-unified/bin/llama-cli}"
 if [ ! -f "$BIN" ]; then
-    BIN="/home/user/source/haloq38flash/repos/halo-box-strix-llama.cpp/build-5f851/bin/llama-cli"
+    BIN="$ROOT/repos/halo-box-strix-llama.cpp/build-5f851/bin/llama-cli"
 fi
 
 PLE="${PLE_MODEL:-/mnt/ssd2/models/qwen38-flash-next/Qwen3.8-Flash-Next-IQ4_XS-PLE.gguf}"

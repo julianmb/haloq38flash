@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
-# Build qualified halo-box engine (commit 5f851647f) for Strix Halo Vulkan
+# DEPRECATED — use scripts/build-engine-unified.sh (halo-box 8c1c282ec).
+# Kept only to reproduce the original 5f851647f qualification build.
+# (Retired 2026-09-23: unified engine supersedes it; see results/MANIFEST.md.)
 set -euo pipefail
 
-REPO_DIR="/home/user/source/haloq38flash/repos/halo-box-strix-llama.cpp"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+REPO_DIR="${ENGINE_REPO_DIR:-$ROOT/repos/halo-box-strix-llama.cpp}"
 BUILD_DIR="$REPO_DIR/build-5f851"
 COMMIT="5f851647f"
 
