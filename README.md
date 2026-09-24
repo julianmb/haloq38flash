@@ -60,7 +60,7 @@ if you just want to run it: `docker compose up --build` and open
 > - **QSA Pooled Key Cache & Microbatch 2048:** Nathan Wilson's QSA pooling reduces KV cache footprint while `-ub 2048` unlocks the `GGML_VK_MMID_M128` shader tile geometry, pushing 250k prompt prefill to **277.3 t/s** (cold ingestion down to 15.0 minutes).
 > - **AMDGPU Watchdog & CCX0 Affinity:** `GGML_VK_MAX_MB_PER_SUBMIT=2048` prevents GPU watchdog timeouts, while `taskset -c 0-7` localizes execution to Zen 5 CCX0, eliminating interconnect bounce.
 > - **Prompt Caching within 96 GB RAM Budget:** Multi-turn follow-ups drop from ~15 minutes to **< 3 seconds (> 300× speedup)** with peak memory capped at **84.1–94.1 GB** (leaving 34–42 GB free system RAM).
-> - Ready-to-run scripts: [`scripts/build-engine-unified.sh`](file:///home/user/source/haloq38flash/scripts/build-engine-unified.sh), [`scripts/launch-server-256k.sh`](file:///home/user/source/haloq38flash/scripts/launch-server-256k.sh), and [`scripts/bench-unified-250k-ub2048.sh`](file:///home/user/source/haloq38flash/scripts/bench-unified-250k-ub2048.sh).
+> - Ready-to-run scripts: [`scripts/build-engine-unified.sh`](scripts/build-engine-unified.sh), [`scripts/launch-server-256k.sh`](scripts/launch-server-256k.sh), and [`scripts/bench-unified-250k-ub2048.sh`](scripts/bench-unified-250k-ub2048.sh).
 
 
 n=3 confirmation (same flags, daily-driver vs merged engine, median [spread]).
