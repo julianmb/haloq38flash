@@ -6,8 +6,9 @@ by sha256. all runs are n=1; same-config mtp spread measured up to ~40%
 (56.4 vs 33.5 t/s at 8k across two sweeps) — peaks are peaks, not medians.
 
 engines:
-- **daily driver**: `llama.cpp-strix-halo-vulkan` @ `ad914eb` — the docker image
+- **daily driver**: `llama.cpp-strix-halo-vulkan` @ `ad914eb` — all depth/bench numbers below were measured on this engine
 - **merged**: `llamacpp-master` `build-hq38` @ `081edc343` (server fingerprint `b10888-081edc343`)
+- **docker image (2026-09-23+)**: now builds halo-box `strix-llama.cpp` @ `8c1c282ec` (see `Dockerfile`, `scripts/build-engine-unified.sh`) — rebench pending, treat all `ad914eb` numbers below as the baseline to beat, not as current-image numbers
 
 ## readme results table (91g ple quant)
 

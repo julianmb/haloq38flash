@@ -167,6 +167,57 @@ docker compose run qwen38-flash-next /app/llama-server \
   --cache-ram 8192 --ctx-checkpoints 32
 ```
 
+### sampling + harnesses (read this before reporting bad quality)
+
+same weights, different request: quality complaints about this model are
+usually sampling mismatch, not the quant. a harness talking to the server
+over the api sends its *own* sampling params, and temperature alone won't
+rescue generation if the rest are wrong. qwen's spec for thinking mode:
+
+```
+temperature 1.0, top_p 0.95, top_k 20, min_p 0.0
+```
+
+(their own swe-bench runs used claude code and mini-swe-agent at exactly
+these values.) if output is good in one client and trash in another on the
+same gguf, check top_k/top_p first. for deterministic benchmarking keep
+temp 0 as in `results/` — for agentic coding work use the spec values.
+
+the server is openai-compatible, so point any harness at it. community
+consensus on r/strixhalo (anecdotal, sep 2026): qwen code handles qwen
+nuances best, pi + a fast backend for agentic work, opencode for real work.
+non-openai clients (anything speaking anthropic `/v1/messages`) go through
+a translating proxy like litellm — with long timeouts and retries for
+multi-hour sessions — not directly against the server.
+quant consensus independently lands where this repo did: `UD-IQ4_XS`-class,
+reported working even on 96gb boxes.
+
+### reasoning loops in agentic harnesses (known failure mode)
+
+long coding sessions can fall into `now I'll write the code / actually let
+me design...` loops that survive template, MTP n=3/n=4, and presence-penalty
+changes, in both pi and qwen code — i.e. not one harness's bug
+(community-reported, r/localaistack, sep 2026). what is known:
+
+- leading hypothesis: qwen needs **preserved thinking** — the full
+  conversation *including thinking blocks* re-sent every turn. some
+  harnesses only do this for known models, not custom endpoints. if your
+  harness supports it, turn it on (`reasoning-preserve` semantics).
+- `--reasoning-budget 2048` helps, but only paired with
+  `--reasoning-budget-message`: bare budget force-closes mid-word
+  (measured 2 cuts in 9); with the message 0 in 6 — and unpaired budget
+  scored worse than thinking-off entirely on qwen3.5. the message is what
+  turns the watchdog into a fix.
+- the only posted 8h-clean config (halo-box vulkan, 262k ctx, pi,
+  loops "a couple times" over days of unattended runs) stacks
+  **`--spec-type draft-mtp,ngram-mod`** (`-n-max 5 -p-min 0.6 -p-split
+  0.30`, draft threads 12/7) on top of `--lazy-mode on-direct`,
+  `--reasoning-preserve`, and the spec sampling values above, at
+  `-ub 2048 -np 1`. i.e. throughput-optimal (mtp n_max 6 alone) is not
+  loop-stable-optimal — if agents loop under mtp, stack ngram-mod and
+  preserve thinking before blaming the quant. all flags verified present
+  in the packaged engine.
+
 ### warm-turn cache (repeat context is nearly free)
 
 re-prompts over the same long context skip prefill from ram checkpoints —
@@ -233,6 +284,10 @@ n=1, single runs. pick your file by use case.
   `results/tier1-128k-plain-t16.log`
 - gpu memory is shared with everything else on the apu — two engines cannot
   hold ~90g+ models simultaneously without an oom cascade
+- kernel/driver layer (community-reported, unverified here): minimal uma
+  frame-buffer in bios plus cmdline `amdgpu.lockup_timeout=... gttsize=...
+  ttm.pages_limit=... iommu=pt` — same watchdog family as
+  `GGML_VK_MAX_MB_PER_SUBMIT` above, one layer down. test before adopting.
 
 ---
 
